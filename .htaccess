@@ -1,0 +1,32 @@
+# Passenger configuration for Flask app
+PassengerEnabled On
+PassengerPython /home/YOUR_CPANEL_USERNAME/virtualenv/anipreneur/3.9/bin/python
+
+# Set the application root
+PassengerAppRoot /home/YOUR_CPANEL_USERNAME/public_html
+
+# Set the WSGI file
+PassengerAppType wsgi
+PassengerStartupFile passenger_wsgi.py
+
+# Environment variables (optional)
+SetEnv FLASK_ENV production
+SetEnv FLASK_DEBUG 0
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# Cache static files
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    Header set Cache-Control "public, immutable"
+</FilesMatch>
+
+# Redirect all requests to the Flask app
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /passenger_wsgi.py/$1 [QSA,L] 

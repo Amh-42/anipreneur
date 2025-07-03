@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error - Anipreneur</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #080a18;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .error-container {
+            max-width: 600px;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            color: #ff8c00;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #a0a0b0;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ffc700, #ff8c00);
+            color: #000;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <h1>500</h1>
+        <h2>Server Error</h2>
+        <p>Something went wrong on our end. We're working to fix the issue. Please try again later.</p>
+        <a href="{{ url_for('index') }}" class="btn">Return to Home</a>
+    </div>
+</body>
+
+</html>
