@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of Manipulation vs. Influence - Anipreneur</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS - Animate on Scroll Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* CSS RESET & ROOT VARIABLES (Same as landing page) */
+        :root {
+            --bg-color: #080a18;
+            --primary-color: #ff8c00;
+            --secondary-color: #00bfff;
+            --accent-yellow: #ffc700;
+            --text-color: #e0e0e0;
+            --text-secondary: #a0a0b0;
+            --card-bg: rgba(23, 27, 46, 0.7);
+            --border-color: rgba(0, 191, 255, 0.2);
+            --glow-color: rgba(0, 191, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* BACKGROUND ANIMATION & GRID (Same as landing page) */
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        #interactive-grid-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            z-index: -2;
+        }
+
+        .grid-item {
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .grid-item:hover {
+            background-color: var(--glow-color);
+            box-shadow: 0 0 15px var(--glow-color);
+            transition-duration: 0s;
+        }
+
+        /* HEADER & FOOTER (Same as landing page) */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(8, 10, 24, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .logo span {
+            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        footer {
+            padding: 40px 10%;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            margin: 0 15px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .copyright span {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+            color: #000;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
+        }
+
+        /* --- NEW STYLES FOR BLOG POST --- */
+        .blog-post-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 150px 20px 50px;
+            /* Reverted back to original padding */
+            position: relative;
+            z-index: 2;
+        }
+
+        .post-header h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .post-header h1 span {
+            background: linear-gradient(45deg, var(--secondary-color), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .post-meta {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .post-meta span {
+            margin: 0 10px;
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 450px;
+            margin: 40px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .article-content p {
+            margin-bottom: 1.5em;
+        }
+
+        .article-content h3 {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            margin-top: 2em;
+            margin-bottom: 1em;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 15px;
+        }
+
+        .article-content blockquote {
+            margin: 2em 0;
+            padding: 20px;
+            border-left: 4px solid var(--accent-yellow);
+            background: var(--card-bg);
+            border-radius: 5px;
+            font-style: italic;
+            color: var(--text-color);
+        }
+
+        .back-link-container {
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .post-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .featured-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Elements (Same as landing page) -->
+    <div id="interactive-grid-container"></div>
+
+    <header>
+        <a href="{{ url_for('index') }}" class="logo">Ani<span>preneur</span></a>
+        <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn">Subscribe Now</a>
+    </header>
+
+    <main id="main-content">
+        <div class="blog-post-container">
+            <div class="post-header" data-aos="fade-up">
+                <h1>The Art of Manipulation vs. <span>Influence</span></h1>
+                <div class="post-meta">
+                    <span>By Anipreneur</span> | <span><i class="fas fa-calendar-alt"></i> March 15, 2024</span>
+                </div>
+            </div>
+
+            <div class="featured-image" data-aos="zoom-in" data-aos-delay="100">
+                <img src="{{ url_for('static', filename='images/chess.jpg') }}" alt="Chess board representing strategy">
+            </div>
+
+            <div class="article-content" data-aos="fade-up" data-aos-delay="200">
+                <p>In the grand theater of anime, two figures stand out for their ability to command others: Lelouch vi
+                    Britannia and Naruto Uzumaki. Both are masters of leadership, yet their methods exist on opposite
+                    ends of a fascinating spectrum: the line between manipulation and influence.</p>
+
+                <p>Understanding this difference is not just an exercise in anime analysis; it is a critical lesson for
+                    mastering real-life interactions, from the boardroom to personal relationships.</p>
+
+                <h3>The Puppet Master's Gambit: Lelouch's Manipulation</h3>
+                <p>Lelouch, the enigmatic protagonist of Code Geass, operates through calculated manipulation. He views
+                    people as pieces on a chessboard, their movements dictated by his Geass and his strategic genius.
+                    His approach is characterized by:</p>
+                <ul>
+                    <li><strong>Control:</strong> He imposes his will, often without the subject's full consent or
+                        knowledge.</li>
+                    <li><strong>Secrecy:</strong> His goals and methods are hidden, creating an information imbalance
+                        that he exploits.</li>
+                    <li><strong>Outcome-Focused:</strong> The end result justifies the means, even if it means
+                        sacrificing pawns for the sake of the king.</li>
+                </ul>
+                <p>While effective for achieving grand, short-term objectives, this method is inherently unstable. It
+                    builds a foundation of distrust and relies on the constant exertion of power. Once the power is
+                    gone, the entire structure collapses.</p>
+
+                <blockquote>
+                    "To defeat evil, I must become a greater evil." This quote perfectly encapsulates Lelouch's
+                    philosophy—a pragmatic, albeit costly, approach to change.
+                </blockquote>
+
+                <h3>The Heart's Resonance: Naruto's Influence</h3>
+                <p>Naruto Uzumaki, in stark contrast, leads through profound influence. He doesn't command loyalty; he
+                    inspires it. His "Talk no Jutsu" is often memed, but it represents a powerful real-world strategy:
+                </p>
+                <ul>
+                    <li><strong>Empathy:</strong> He seeks to understand the pain and motivations of others, even his
+                        enemies.</li>
+                    <li><strong>Shared Vision:</strong> He rallies people around a common, positive goal—a world without
+                        hatred.</li>
+                    <li><strong>Authenticity:</strong> Naruto is unapologetically himself. His beliefs and actions are
+                        transparent, building a bedrock of trust.</li>
+                </ul>
+                <p>Influence, unlike manipulation, creates a self-sustaining network. The bonds Naruto forges are
+                    genuine and resilient. His followers aren't pawns; they are partners who willingly contribute to the
+                    shared mission because they believe in it, and in him. This path is slower and fraught with
+                    emotional vulnerability, but its results are lasting.</p>
+
+                <h3>The Anipreneur's Takeaway</h3>
+                <p>In your own life, you are faced with this choice daily. Do you manipulate situations for a quick win,
+                    or do you invest the time and emotional energy to build genuine influence? The former might close a
+                    deal, but the latter builds a career. The former might win an argument, but the latter builds a
+                    relationship. The strategist learns from Lelouch, but the true master learns from Naruto.</p>
+            </div>
+
+            <div class="back-link-container" data-aos="fade-up">
+                <a href="{{ url_for('index') }}" class="btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://www.youtube.com/@Anipreneur" target="_blank" aria-label="YouTube"><i
+                    class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p class="copyright">© 2024 <span>Anipreneur</span>. All Rights Reserved.</p>
+    </footer>
+
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Import Map for Three.js (Same as landing page) -->
+    <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+
+    <!-- Custom JS (Same as landing page) -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- DYNAMICALLY OFFSET FOR FIXED HEADER ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('header');
+            const mainContent = document.getElementById('main-content');
+            if (header && mainContent) {
+                const headerHeight = header.offsetHeight;
+                mainContent.style.marginTop = `${headerHeight}px`;
+            }
+        });
+        // --- END OF HEADER OFFSET SCRIPT ---
+
+        // --- Initialize Base Website Scripts ---
+        AOS.init({ duration: 800, once: true, offset: 50 });
+        const gridContainer = document.getElementById('interactive-grid-container');
+        for (let i = 0; i < 1000; i++) { const el = document.createElement('div'); el.classList.add('grid-item'); gridContainer.appendChild(el); }
+        let scene, camera, renderer, particles, rotationGroup;
+        let mouseX = 0, mouseY = 0, explosionProgress = 0;
+        const originalPositions = [], randomPositions = [];
+        const PARTICLE_COUNT = 5000, GLOBE_RADIUS = 5, EXPLOSION_RADIUS = 15, ROTATION_SPEED = 0.5, EASING_FACTOR = 0.05;
+        function initGlobe() {
+            scene = new THREE.Scene();
+            rotationGroup = new THREE.Group();
+            scene.add(rotationGroup);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 12;
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.body.appendChild(renderer.domElement);
+            createParticles();
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('wheel', onScroll);
+            window.addEventListener('resize', onWindowResize);
+        }
+        function createParticles() {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const i_float = i + 0.5, phi = Math.acos(1 - 2 * i_float / PARTICLE_COUNT), theta = Math.PI * (1 + Math.sqrt(5)) * i_float;
+                const x = GLOBE_RADIUS * Math.cos(theta) * Math.sin(phi), y = GLOBE_RADIUS * Math.sin(theta) * Math.sin(phi), z = GLOBE_RADIUS * Math.cos(phi);
+                originalPositions.push(x, y, z);
+                const rX = (Math.random() - 0.5) * 2 * EXPLOSION_RADIUS, rY = (Math.random() - 0.5) * 2 * EXPLOSION_RADIUS, rZ = (Math.random() - 0.5) * 2 * EXPLOSION_RADIUS;
+                randomPositions.push(rX, rY, rZ);
+                positions[i * 3] = x; positions[i * 3 + 1] = y; positions[i * 3 + 2] = z;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({ color: 0x00bfff, size: 0.03, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, });
+            particles = new THREE.Points(geometry, material);
+            rotationGroup.add(particles);
+        }
+        function onMouseMove(event) { mouseX = (event.clientX / window.innerWidth) * 2 - 1; mouseY = -(event.clientY / window.innerHeight) * 2 + 1; }
+        function onScroll(event) { explosionProgress += event.deltaY * 0.001; explosionProgress = Math.max(0, Math.min(1, explosionProgress)); }
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); }
+        function animateGlobe() {
+            requestAnimationFrame(animateGlobe);
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const currentScroll = window.scrollY;
+            explosionProgress = scrollableHeight > 0 ? currentScroll / scrollableHeight : 0;
+            rotationGroup.rotation.y += 0.0005;
+            const targetRotationX = mouseY * ROTATION_SPEED, targetRotationY = mouseX * ROTATION_SPEED;
+            particles.rotation.x += (targetRotationX - particles.rotation.x) * EASING_FACTOR;
+            particles.rotation.y += (targetRotationY - particles.rotation.y) * EASING_FACTOR;
+            const positions = particles.geometry.attributes.position;
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
+                const currentX = THREE.MathUtils.lerp(originalPositions[ix], randomPositions[ix], explosionProgress);
+                const currentY = THREE.MathUtils.lerp(originalPositions[iy], randomPositions[iy], explosionProgress);
+                const currentZ = THREE.MathUtils.lerp(originalPositions[iz], randomPositions[iz], explosionProgress);
+                positions.setXYZ(i, currentX, currentY, currentZ);
+            }
+            positions.needsUpdate = true;
+            renderer.render(scene, camera);
+        }
+        initGlobe();
+        animateGlobe();
+        // NOTE: The terminal/puzzle logic is not needed on the blog page, so it has been removed from this script block for cleanliness.
+    </script>
+</body>
+
+</html>
