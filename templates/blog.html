@@ -183,6 +183,23 @@
             -webkit-text-fill-color: transparent;
         }
 
+        .post-header h2 a span {
+            background: linear-gradient(45deg, var(--secondary-color), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .post-header h2 a strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .post-header h2 a em {
+            color: var(--accent-yellow);
+            font-style: italic;
+        }
+
         .post-meta {
             text-align: center;
             color: var(--text-secondary);
@@ -267,73 +284,60 @@
 
     <main id="main-content">
         <div class="blog-post-container">
-            <div class="post-header" data-aos="fade-up">
-                <h1>The Art of Manipulation vs. <span>Influence</span></h1>
-                <div class="post-meta">
-                    <span>By Anipreneur</span> | <span><i class="fas fa-calendar-alt"></i> March 15, 2024</span>
+            {% if posts.items %}
+            {% for post in posts.items %}
+            <div class="blog-post" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="post-header">
+                    <h2><a href="{{ url_for('post_detail', slug=post.slug) }}"
+                            style="color: inherit; text-decoration: none;">{{ post.title | safe }}</a></h2>
+                    <div class="post-meta">
+                        <span>By {{ post.author.username }}</span> |
+                        <span><i class="fas fa-calendar-alt"></i> {{ post.created_at.strftime('%B %d, %Y') }}</span>
+                    </div>
+                </div>
+
+                {% if post.featured_image %}
+                <div class="featured-image">
+                    <img src="{{ post.featured_image }}" alt="{{ post.title }}">
+                </div>
+                {% endif %}
+
+                <div class="article-content">
+                    {% if post.excerpt %}
+                    {{ post.excerpt | safe }}
+                    {% else %}
+                    {{ post.content[:300] | safe }}...
+                    {% endif %}
+                </div>
+
+                <div class="back-link-container">
+                    <a href="{{ url_for('post_detail', slug=post.slug) }}" class="btn">Read More →</a>
                 </div>
             </div>
+            {% endfor %}
 
-            <div class="featured-image" data-aos="zoom-in" data-aos-delay="100">
-                <img src="{{ url_for('static', filename='images/chess.jpg') }}" alt="Chess board representing strategy">
+            <!-- Pagination -->
+            {% if posts.pages > 1 %}
+            <div class="pagination" data-aos="fade-up">
+                {% if posts.has_prev %}
+                <a href="{{ url_for('blog', page=posts.prev_num) }}" class="btn">← Previous</a>
+                {% endif %}
+
+                <span style="color: var(--text-secondary); margin: 0 20px;">
+                    Page {{ posts.page }} of {{ posts.pages }}
+                </span>
+
+                {% if posts.has_next %}
+                <a href="{{ url_for('blog', page=posts.next_num) }}" class="btn">Next →</a>
+                {% endif %}
             </div>
-
-            <div class="article-content" data-aos="fade-up" data-aos-delay="200">
-                <p>In the grand theater of anime, two figures stand out for their ability to command others: Lelouch vi
-                    Britannia and Naruto Uzumaki. Both are masters of leadership, yet their methods exist on opposite
-                    ends of a fascinating spectrum: the line between manipulation and influence.</p>
-
-                <p>Understanding this difference is not just an exercise in anime analysis; it is a critical lesson for
-                    mastering real-life interactions, from the boardroom to personal relationships.</p>
-
-                <h3>The Puppet Master's Gambit: Lelouch's Manipulation</h3>
-                <p>Lelouch, the enigmatic protagonist of Code Geass, operates through calculated manipulation. He views
-                    people as pieces on a chessboard, their movements dictated by his Geass and his strategic genius.
-                    His approach is characterized by:</p>
-                <ul>
-                    <li><strong>Control:</strong> He imposes his will, often without the subject's full consent or
-                        knowledge.</li>
-                    <li><strong>Secrecy:</strong> His goals and methods are hidden, creating an information imbalance
-                        that he exploits.</li>
-                    <li><strong>Outcome-Focused:</strong> The end result justifies the means, even if it means
-                        sacrificing pawns for the sake of the king.</li>
-                </ul>
-                <p>While effective for achieving grand, short-term objectives, this method is inherently unstable. It
-                    builds a foundation of distrust and relies on the constant exertion of power. Once the power is
-                    gone, the entire structure collapses.</p>
-
-                <blockquote>
-                    "To defeat evil, I must become a greater evil." This quote perfectly encapsulates Lelouch's
-                    philosophy—a pragmatic, albeit costly, approach to change.
-                </blockquote>
-
-                <h3>The Heart's Resonance: Naruto's Influence</h3>
-                <p>Naruto Uzumaki, in stark contrast, leads through profound influence. He doesn't command loyalty; he
-                    inspires it. His "Talk no Jutsu" is often memed, but it represents a powerful real-world strategy:
-                </p>
-                <ul>
-                    <li><strong>Empathy:</strong> He seeks to understand the pain and motivations of others, even his
-                        enemies.</li>
-                    <li><strong>Shared Vision:</strong> He rallies people around a common, positive goal—a world without
-                        hatred.</li>
-                    <li><strong>Authenticity:</strong> Naruto is unapologetically himself. His beliefs and actions are
-                        transparent, building a bedrock of trust.</li>
-                </ul>
-                <p>Influence, unlike manipulation, creates a self-sustaining network. The bonds Naruto forges are
-                    genuine and resilient. His followers aren't pawns; they are partners who willingly contribute to the
-                    shared mission because they believe in it, and in him. This path is slower and fraught with
-                    emotional vulnerability, but its results are lasting.</p>
-
-                <h3>The Anipreneur's Takeaway</h3>
-                <p>In your own life, you are faced with this choice daily. Do you manipulate situations for a quick win,
-                    or do you invest the time and emotional energy to build genuine influence? The former might close a
-                    deal, but the latter builds a career. The former might win an argument, but the latter builds a
-                    relationship. The strategist learns from Lelouch, but the true master learns from Naruto.</p>
+            {% endif %}
+            {% else %}
+            <div class="no-posts" data-aos="fade-up">
+                <h2>No Posts Yet</h2>
+                <p>Check back soon for new content!</p>
             </div>
-
-            <div class="back-link-container" data-aos="fade-up">
-                <a href="{{ url_for('index') }}" class="btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
-            </div>
+            {% endif %}
         </div>
     </main>
 
@@ -344,7 +348,9 @@
             <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
-        <p class="copyright">© 2024 <span>Anipreneur</span>. All Rights Reserved.</p>
+        <p class="copyright">©
+            <script>document.write(new Date().getFullYear());</script> <span>Anipreneur</span>. All Rights Reserved.
+        </p>
     </footer>
 
     <!-- AOS Library -->

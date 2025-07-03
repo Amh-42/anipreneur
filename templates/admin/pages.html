@@ -1,0 +1,55 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Pages - Admin{% endblock %}
+{% block page_title %}Manage Pages{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">All Pages</h3>
+        <a href="{{ url_for('admin_new_page') }}" class="btn">
+            <i class="fas fa-plus"></i> New Page
+        </a>
+    </div>
+
+    {% if pages %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Slug</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for page in pages %}
+            <tr>
+                <td>{{ page.title }}</td>
+                <td><code>{{ page.slug }}</code></td>
+                <td>
+                    <span class="status-badge status-{{ page.status }}">
+                        {{ page.status.title() }}
+                    </span>
+                </td>
+                <td>{{ page.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('admin_edit_page', id=page.id) }}" class="btn"
+                        style="padding: 5px 10px; font-size: 0.8rem; margin-right: 5px;">Edit</a>
+                    <form method="POST" action="{{ url_for('admin_delete_page', id=page.id) }}"
+                        style="display: inline;">
+                        <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;"
+                            onclick="return confirm('Are you sure you want to delete this page?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No pages yet. <a
+            href="{{ url_for('admin_new_page') }}" style="color: var(--primary-color);">Create your first page</a></p>
+    {% endif %}
+</div>
+{% endblock %}

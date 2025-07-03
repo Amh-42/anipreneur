@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'Edit' if page else 'New' }} Page - Admin{% endblock %}
+{% block page_title %}{{ 'Edit' if page else 'New' }} Page{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form method="POST">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" class="form-control" value="{{ page.title if page else '' }}"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea id="content" name="content" class="form-control" rows="15"
+                required>{{ page.content if page else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" class="form-control">
+                <option value="draft" {{ 'selected' if page and page.status=='draft' else '' }}>Draft</option>
+                <option value="published" {{ 'selected' if page and page.status=='published' else '' }}>Published
+                </option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 15px;">
+            <button type="submit" class="btn">
+                <i class="fas fa-save"></i> {{ 'Update' if page else 'Create' }} Page
+            </button>
+            <a href="{{ url_for('admin_pages') }}" class="btn" style="background: var(--text-secondary);">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

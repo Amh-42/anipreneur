@@ -115,6 +115,93 @@
             -webkit-text-fill-color: transparent;
         }
 
+        .main-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .main-nav .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 8px 18px;
+            border-radius: 30px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .main-nav .nav-link:hover {
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        .main-nav .btn {
+            /* Override nav-link styles for the Subscribe button */
+            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+            color: #000 !important;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-nav .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
+            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+            color: #000 !important;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            z-index: 200;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--text-color);
+            margin: 4px 0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 70px;
+            right: 10%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 20px 30px;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 150;
+        }
+
+        .mobile-nav .nav-link {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-color);
+            text-align: left;
+            font-size: 1.2rem;
+        }
+
+        .mobile-nav .btn {
+            width: 100%;
+            text-align: center;
+        }
+
         /* GENERAL STYLES & UTILITIES */
         .container {
             max-width: 1200px;
@@ -601,25 +688,19 @@
         }
 
         /* RESPONSIVENESS */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             header {
                 padding: 20px 5%;
             }
+        }
 
-            .container {
-                padding: 80px 20px;
+        @media (max-width: 700px) {
+            .main-nav {
+                display: none;
             }
 
-            h2 {
-                font-size: 2rem;
-            }
-
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-content p {
-                font-size: 1rem;
+            .hamburger {
+                display: flex;
             }
         }
     </style>
@@ -632,7 +713,19 @@
 
     <header>
         <a href="{{ url_for('index') }}" class="logo">Ani<span>preneur</span></a>
-        <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn">Subscribe Now</a>
+        <nav class="main-nav">
+            <a href="{{ url_for('blog') }}" class="nav-link">Blog</a>
+            <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn nav-link">Subscribe Now</a>
+        </nav>
+        <div class="hamburger" id="hamburger-menu" tabindex="0" aria-label="Open menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav" id="mobile-nav">
+            <a href="{{ url_for('blog') }}" class="nav-link">Blog</a>
+            <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn nav-link">Subscribe Now</a>
+        </div>
     </header>
 
     <main>
@@ -783,7 +876,9 @@
             <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
-        <p class="copyright">© 2024 <span>Anipreneur</span>. All Rights Reserved.</p>
+        <p class="copyright">©
+            <script>document.write(new Date().getFullYear());</script> <span>Anipreneur</span>. All Rights Reserved.
+        </p>
     </footer>
 
     <!-- AOS Library -->
@@ -947,6 +1042,22 @@
         // --- Start The Globe ---
         initGlobe();
         animateGlobe();
+
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger-menu');
+        const mobileNav = document.getElementById('mobile-nav');
+        hamburger.addEventListener('click', function () {
+            const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+            hamburger.setAttribute('aria-expanded', !expanded);
+            mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+        });
+        // Close mobile nav on outside click
+        document.addEventListener('click', function (e) {
+            if (!hamburger.contains(e.target) && !mobileNav.contains(e.target)) {
+                mobileNav.style.display = 'none';
+                hamburger.setAttribute('aria-expanded', false);
+            }
+        });
 
     </script>
 </body>

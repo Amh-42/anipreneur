@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard - Admin{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ post_count }}</div>
+        <div class="stat-label">Total Posts</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ page_count }}</div>
+        <div class="stat-label">Total Pages</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ user_count }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Recent Posts</h3>
+        <a href="{{ url_for('admin_posts') }}" class="btn">View All Posts</a>
+    </div>
+
+    {% if recent_posts %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Author</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in recent_posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>
+                    <span class="status-badge status-{{ post.status }}">
+                        {{ post.status.title() }}
+                    </span>
+                </td>
+                <td>{{ post.author.username }}</td>
+                <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('admin_edit_post', id=post.id) }}" class="btn"
+                        style="padding: 5px 10px; font-size: 0.8rem;">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No posts yet. <a
+            href="{{ url_for('admin_new_post') }}" style="color: var(--primary-color);">Create your first post</a></p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Quick Actions</h3>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="{{ url_for('admin_new_post') }}" class="btn">
+            <i class="fas fa-plus"></i> New Post
+        </a>
+        <a href="{{ url_for('admin_new_page') }}" class="btn">
+            <i class="fas fa-file-plus"></i> New Page
+        </a>
+        <a href="{{ url_for('admin_posts') }}" class="btn">
+            <i class="fas fa-list"></i> Manage Posts
+        </a>
+        <a href="{{ url_for('admin_pages') }}" class="btn">
+            <i class="fas fa-folder"></i> Manage Pages
+        </a>
+    </div>
+</div>
+{% endblock %}

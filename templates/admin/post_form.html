@@ -1,0 +1,79 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'Edit' if post else 'New' }} Post - Admin{% endblock %}
+{% block page_title %}{{ 'Edit' if post else 'New' }} Post{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form method="POST">
+        <div class="form-group">
+            <label for="title">Title (HTML allowed)</label>
+            <input type="text" id="title" name="title" class="form-control" value="{{ post.title if post else '' }}"
+                required placeholder="You can use HTML like: The Art of &lt;span&gt;Manipulation&lt;/span&gt;">
+        </div>
+
+        <div class="form-group">
+            <label for="excerpt">Excerpt (Optional)</label>
+            <textarea id="excerpt" name="excerpt" class="form-control"
+                rows="3">{{ post.excerpt if post else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="featured_image">Featured Image URL (Optional)</label>
+            <input type="url" id="featured_image" name="featured_image" class="form-control"
+                value="{{ post.featured_image if post else '' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="content">Content (HTML allowed)</label>
+            <textarea id="content" name="content" class="form-control" rows="15" required
+                placeholder="You can use HTML tags like:&#10;&lt;h3&gt;Your Heading&lt;/h3&gt;&#10;&lt;p&gt;Your paragraph&lt;/p&gt;&#10;&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;">{{ post.content if post else '' }}</textarea>
+            <div
+                style="margin-top: 10px; padding: 10px; background: rgba(0, 191, 255, 0.1); border: 1px solid var(--secondary-color); border-radius: 5px; font-size: 0.9rem;">
+                <strong>HTML Guide:</strong><br>
+                <strong>Title:</strong><br>
+                • <code>&lt;span&gt;Highlighted text&lt;/span&gt;</code> - Highlighted text<br>
+                • <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code> - Bold text<br>
+                • <code>&lt;em&gt;Italic text&lt;/em&gt;</code> - Italic text<br>
+                <strong>Content:</strong><br>
+                • <code>&lt;h3&gt;Heading&lt;/h3&gt;</code> - Section headings<br>
+                • <code>&lt;p&gt;Paragraph text&lt;/p&gt;</code> - Paragraphs<br>
+                • <code>&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;</code> - Bullet lists<br>
+                • <code>&lt;blockquote&gt;Quote&lt;/blockquote&gt;</code> - Blockquotes<br>
+                • <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code> - Bold text<br>
+                • <code>&lt;em&gt;Italic text&lt;/em&gt;</code> - Italic text
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" class="form-control">
+                <option value="draft" {{ 'selected' if post and post.status=='draft' else '' }}>Draft</option>
+                <option value="published" {{ 'selected' if post and post.status=='published' else '' }}>Published
+                </option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 15px;">
+            <button type="submit" class="btn">
+                <i class="fas fa-save"></i> {{ 'Update' if post else 'Create' }} Post
+            </button>
+            <a href="{{ url_for('admin_posts') }}" class="btn" style="background: var(--text-secondary);">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Auto-generate slug from title
+    document.getElementById('title').addEventListener('input', function () {
+        const title = this.value;
+        const slug = title.toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[-\s]+/g, '-')
+            .trim('-');
+        // You could add a slug field if needed
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Users - Admin{% endblock %}
+{% block page_title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">All Users</h3>
+    </div>
+
+    {% if users %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Admin</th>
+                <th>Approved</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.is_admin %}
+                    <span class="status-badge status-published">Yes</span>
+                    {% else %}
+                    <span class="status-badge status-draft">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.is_approved %}
+                    <span class="status-badge status-published">Yes</span>
+                    {% else %}
+                    <span class="status-badge status-draft">No</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    {% if not user.is_approved %}
+                    <form method="POST" action="{{ url_for('approve_user', user_id=user.id) }}"
+                        style="display: inline; margin-right: 5px;">
+                        <button type="submit" class="btn"
+                            style="padding: 5px 10px; font-size: 0.8rem; background: var(--success-color);"
+                            onclick="return confirm('Approve this user?')">Approve</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('reject_user', user_id=user.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;"
+                            onclick="return confirm('Reject and delete this user? This action cannot be undone.')">Reject</button>
+                    </form>
+                    {% else %}
+                    <span style="color: var(--text-secondary); font-size: 0.8rem;">Already approved</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No users found.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Pending Approvals</h3>
+    </div>
+
+    {% set pending_users = users | selectattr('is_approved', 'equalto', false) | list %}
+    {% if pending_users %}
+    <p style="color: var(--accent-yellow); margin-bottom: 15px;">
+        <i class="fas fa-exclamation-triangle"></i>
+        There are {{ pending_users | length }} user(s) waiting for approval.
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+        {% for user in pending_users %}
+        <div
+            style="background: rgba(255, 193, 7, 0.1); border: 1px solid var(--accent-yellow); border-radius: 8px; padding: 15px;">
+            <h4 style="color: var(--accent-yellow); margin-bottom: 10px;">{{ user.username }}</h4>
+            <p style="color: var(--text-secondary); margin-bottom: 10px;">{{ user.email }}</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px;">Registered: {{
+                user.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            <div style="display: flex; gap: 10px;">
+                <form method="POST" action="{{ url_for('approve_user', user_id=user.id) }}" style="flex: 1;">
+                    <button type="submit" class="btn" style="width: 100%; background: var(--success-color);"
+                        onclick="return confirm('Approve {{ user.username }}?')">Approve</button>
+                </form>
+                <form method="POST" action="{{ url_for('reject_user', user_id=user.id) }}" style="flex: 1;">
+                    <button type="submit" class="btn btn-danger" style="width: 100%;"
+                        onclick="return confirm('Reject and delete {{ user.username }}? This action cannot be undone.')">Reject</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No pending approvals.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the application directory to the Python path
-INTERP = os.path.expanduser("/home/YOUR_CPANEL_USERNAME/virtualenv/anipreneur/3.9/bin/python")
+INTERP = os.path.expanduser("/home/aniprebf/virtualenv/repositories/anipreneur/3.11/bin/python")
 if sys.executable != INTERP:
     os.execl(INTERP, INTERP, *sys.argv)
 
