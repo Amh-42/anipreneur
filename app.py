@@ -45,6 +45,14 @@ def index():
 def social_links():
     return render_template('social_links.html')
 
+@app.route('/courses')
+def courses():
+    return render_template('courses.html')
+
+@app.route('/coming-soon')
+def coming_soon():
+    return render_template('coming_soon.html')
+
 @app.route('/blog')
 def blog():
     page = request.args.get('page', 1, type=int)

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Coming Soon - Anipreneur{% endblock %}
+
+{% block content %}
+<div class="coming-soon-container">
+    <div class="coming-soon-content">
+        <h1 class="coming-soon-title">Coming Soon</h1>
+        <p class="coming-soon-subtitle">Our courses are currently in development</p>
+        <p class="coming-soon-description">We're working hard to bring you the best anime-inspired entrepreneurship and
+            life mastery content. Stay tuned for updates!</p>
+        <a href="{{ url_for('index') }}" class="coming-soon-btn">Back to Home</a>
+    </div>
+</div>
+
+<style>
+    .coming-soon-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .coming-soon-content {
+        max-width: 800px;
+    }
+
+    .coming-soon-title {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.2;
+    }
+
+    .coming-soon-subtitle {
+        font-size: 1.8rem;
+        color: var(--text-color);
+        margin-bottom: 30px;
+        font-weight: 500;
+    }
+
+    .coming-soon-description {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-bottom: 50px;
+        line-height: 1.6;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .coming-soon-btn {
+        display: inline-block;
+        background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+        color: #000;
+        text-decoration: none;
+        padding: 18px 50px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .coming-soon-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .coming-soon-title {
+            font-size: 2.5rem;
+        }
+
+        .coming-soon-subtitle {
+            font-size: 1.3rem;
+        }
+
+        .coming-soon-description {
+            font-size: 1.1rem;
+        }
+
+        .coming-soon-btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+    }
+</style>
+{% endblock %}
