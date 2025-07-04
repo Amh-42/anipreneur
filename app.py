@@ -41,6 +41,10 @@ def index():
     posts = Post.query.filter_by(status='published').order_by(Post.created_at.desc()).limit(3).all()
     return render_template('index.html', posts=posts)
 
+@app.route('/links')
+def social_links():
+    return render_template('social_links.html')
+
 @app.route('/blog')
 def blog():
     page = request.args.get('page', 1, type=int)
