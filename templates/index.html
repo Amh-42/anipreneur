@@ -2,6 +2,360 @@
 
 {% block title %}Anipreneur - Decode Anime, Master Life{% endblock %}
 
+{% block extra_styles %}
+/* ABOUT SECTION */
+.about-content {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 40px;
+}
+
+.features-list {
+list-style: none;
+max-width: 700px;
+}
+
+.features-list li {
+background: var(--card-bg);
+border: 1px solid var(--border-color);
+padding: 20px;
+margin-bottom: 20px;
+border-radius: 10px;
+display: flex;
+align-items: center;
+gap: 20px;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.features-list li:hover {
+transform: translateY(-5px);
+box-shadow: 0 0 20px var(--glow-color);
+}
+
+.features-list i {
+font-size: 1.5rem;
+color: var(--secondary-color);
+min-width: 30px;
+text-align: center;
+}
+
+/* PR STUNT / INTELLECTUAL CHALLENGE SECTION */
+.pr-stunt-section {
+padding-top: 50px;
+padding-bottom: 50px;
+}
+
+.terminal {
+background: rgba(10, 12, 24, 0.9);
+border: 1px solid var(--border-color);
+border-radius: 8px;
+box-shadow: 0 0 40px rgba(0, 191, 255, 0.2);
+backdrop-filter: blur(5px);
+overflow: hidden;
+font-family: 'Courier New', Courier, monospace;
+}
+
+.terminal-header {
+background: #1a1d2e;
+padding: 10px;
+display: flex;
+align-items: center;
+border-bottom: 1px solid var(--border-color);
+}
+
+.terminal-buttons {
+display: flex;
+}
+
+.terminal-buttons span {
+display: block;
+width: 12px;
+height: 12px;
+border-radius: 50%;
+margin-right: 8px;
+}
+
+.btn-close {
+background: #ff5f56;
+}
+
+.btn-min {
+background: #ffbd2e;
+}
+
+.btn-max {
+background: #27c93f;
+}
+
+.terminal-title {
+color: var(--text-secondary);
+font-size: 0.9rem;
+margin: 0 auto;
+}
+
+.terminal-body {
+padding: 20px;
+min-height: 250px;
+font-size: 1rem;
+line-height: 1.5;
+color: #00ff41;
+text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+}
+
+.terminal-body .line {
+white-space: pre-wrap;
+}
+
+.terminal-body .line.highlight {
+color: var(--accent-yellow);
+}
+
+.cursor {
+display: inline-block;
+background: #00ff41;
+width: 8px;
+height: 16px;
+animation: blink 1s infinite;
+}
+
+@keyframes blink {
+0%, 50% { opacity: 1; }
+51%, 100% { opacity: 0; }
+}
+
+.puzzle-container {
+display: none;
+padding: 20px;
+background: rgba(0, 0, 0, 0.3);
+}
+
+.puzzle-container.visible {
+display: block;
+}
+
+.input-group {
+display: flex;
+gap: 10px;
+align-items: center;
+margin-top: 15px;
+}
+
+.input-group label {
+color: #00ff41;
+font-size: 0.9rem;
+}
+
+.input-group input {
+background: rgba(0, 0, 0, 0.5);
+border: 1px solid var(--border-color);
+color: #00ff41;
+padding: 8px 12px;
+border-radius: 4px;
+font-family: 'Courier New', Courier, monospace;
+font-size: 0.9rem;
+}
+
+.decrypt-btn {
+background: var(--primary-color);
+color: #000;
+border: none;
+padding: 8px 16px;
+border-radius: 4px;
+font-weight: 600;
+cursor: pointer;
+font-family: 'Courier New', Courier, monospace;
+}
+
+.decrypt-btn:hover {
+background: var(--accent-yellow);
+}
+
+#terminal-message {
+margin-bottom: 15px;
+font-weight: 600;
+}
+
+.success-message {
+color: #27c93f;
+}
+
+.error-message {
+color: #ff5f56;
+}
+
+.video-reveal {
+display: none;
+padding: 20px;
+background: rgba(0, 0, 0, 0.3);
+}
+
+.video-reveal.visible {
+display: block;
+}
+
+.video-reveal h3 {
+color: var(--accent-yellow);
+margin-bottom: 15px;
+font-family: 'Courier New', Courier, monospace;
+}
+
+.decrypted-message {
+color: #00ff41;
+font-style: italic;
+margin-bottom: 20px;
+text-align: center;
+font-size: 1.1rem;
+}
+
+.video-wrapper {
+position: relative;
+width: 100%;
+height: 0;
+padding-bottom: 56.25%;
+border-radius: 8px;
+overflow: hidden;
+}
+
+.video-wrapper iframe {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+
+/* VIDEO GRID */
+.video-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 30px;
+margin-top: 50px;
+}
+
+.video-card {
+background: var(--card-bg);
+border: 1px solid var(--border-color);
+border-radius: 15px;
+overflow: hidden;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-card:hover {
+transform: translateY(-10px);
+box-shadow: 0 20px 40px rgba(0, 191, 255, 0.3);
+}
+
+.video-thumbnail {
+position: relative;
+width: 100%;
+height: 0;
+padding-bottom: 56.25%;
+overflow: hidden;
+}
+
+.video-thumbnail iframe {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+
+.video-info {
+padding: 25px;
+}
+
+.video-info h3 {
+font-size: 1.3rem;
+margin-bottom: 15px;
+color: var(--text-color);
+}
+
+.video-info p {
+color: var(--text-secondary);
+line-height: 1.6;
+}
+
+/* BLOG GRID */
+.blog-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 30px;
+margin-top: 50px;
+}
+
+.blog-card {
+background: var(--card-bg);
+border: 1px solid var(--border-color);
+border-radius: 15px;
+padding: 30px;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 15px 30px rgba(0, 191, 255, 0.2);
+}
+
+.blog-card h3 {
+font-size: 1.2rem;
+margin-bottom: 15px;
+color: var(--text-color);
+}
+
+.blog-card p {
+color: var(--text-secondary);
+line-height: 1.6;
+margin-bottom: 20px;
+}
+
+.read-more {
+color: var(--primary-color);
+text-decoration: none;
+font-weight: 600;
+transition: color 0.3s ease;
+}
+
+.read-more:hover {
+color: var(--accent-yellow);
+}
+
+/* CTA SECTION */
+.cta-section {
+text-align: center;
+background: var(--card-bg);
+border: 1px solid var(--border-color);
+border-radius: 20px;
+padding: 60px 40px;
+margin-top: 80px;
+}
+
+.cta-section h2 {
+font-size: 2.5rem;
+margin-bottom: 20px;
+}
+
+.cta-section p {
+font-size: 1.2rem;
+color: var(--text-secondary);
+margin-bottom: 40px;
+max-width: 600px;
+margin-left: auto;
+margin-right: auto;
+}
+
+@media (max-width: 768px) {
+.video-grid {
+grid-template-columns: 1fr;
+}
+
+.blog-grid {
+grid-template-columns: 1fr;
+}
+}
+{% endblock %}
+
 {% block content %}
 <!-- HERO SECTION -->
 <section class="hero" id="home">
