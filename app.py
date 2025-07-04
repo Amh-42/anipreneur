@@ -17,16 +17,40 @@ app.config['DEBUG'] = True
 ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1').split(',')
 ALLOWED_IPS = [ip.strip() for ip in ALLOWED_IPS if ip.strip()]
 
+# Debug mode - set to True to temporarily bypass IP restrictions
+DEBUG_MODE = os.environ.get('ADMIN_DEBUG_MODE', 'False').lower() == 'true'
+
 def admin_ip_required(f):
     """Decorator to restrict admin access to specific IP addresses"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # Skip IP check if in debug mode
+        if DEBUG_MODE:
+            app.logger.info(f'DEBUG MODE: Bypassing IP restriction for {request.endpoint}')
+            return f(*args, **kwargs)
+        
+        # Get client IP, handling proxy environments (like cPanel)
         client_ip = request.remote_addr
+        
+        # Check for proxy headers (common in cPanel environments)
+        if request.headers.get('X-Forwarded-For'):
+            client_ip = request.headers.get('X-Forwarded-For').split(',')[0].strip()
+        elif request.headers.get('X-Real-IP'):
+            client_ip = request.headers.get('X-Real-IP')
+        elif request.headers.get('X-Client-IP'):
+            client_ip = request.headers.get('X-Client-IP')
+        elif request.headers.get('CF-Connecting-IP'):  # Cloudflare
+            client_ip = request.headers.get('CF-Connecting-IP')
+        
+        # Log the detected IP for debugging
+        app.logger.info(f'Admin access attempt from IP: {client_ip}')
+        app.logger.info(f'Headers: X-Forwarded-For={request.headers.get("X-Forwarded-For")}, X-Real-IP={request.headers.get("X-Real-IP")}')
         
         # Check if client IP is in allowed list
         if client_ip not in ALLOWED_IPS:
             # Log unauthorized access attempt
             app.logger.warning(f'Unauthorized admin access attempt from IP: {client_ip}')
+            app.logger.warning(f'Allowed IPs: {ALLOWED_IPS}')
             abort(403, description="Access denied. Your IP address is not authorized to access the admin panel.")
         
         return f(*args, **kwargs)

@@ -36,8 +36,8 @@ This will automatically detect your public IP and add it to the whitelist.
 ### 3. Add Specific IP Addresses
 
 ```bash
-python manage_admin_access.py add 192.168.1.100
-python manage_admin_access.py add 203.0.113.45
+python manage_admin_access.py add 196.189.145.138
+python manage_admin_access.py add 192.168.213.215
 ```
 
 ### 4. Remove IP Addresses
@@ -53,7 +53,7 @@ python manage_admin_access.py remove 192.168.1.100
 Set the environment variable before running the app:
 
 ```bash
-export ADMIN_ALLOWED_IPS='127.0.0.1,::1,192.168.1.100,203.0.113.45'
+export ADMIN_ALLOWED_IPS='127.0.0.1,::1,196.189.145.138,192.168.213.215'
 python app.py
 ```
 
