@@ -157,3 +157,6 @@ logs/
 tmp/
 temp/
 venv/
+
+.htaccess
+passenger_wsgi.py

@@ -1,1067 +1,196 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anipreneur - Decode Anime, Master Life</title>
-
-    <!-- Google Fonts: Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- AOS - Animate on Scroll Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-    <style>
-        /* CSS RESET & ROOT VARIABLES */
-        :root {
-            --bg-color: #080a18;
-            --primary-color: #ff8c00;
-            /* Orange from logo */
-            --secondary-color: #00bfff;
-            /* Cyan from logo */
-            --accent-yellow: #ffc700;
-            /* Yellow from logo */
-            --text-color: #e0e0e0;
-            --text-secondary: #a0a0b0;
-            --card-bg: rgba(23, 27, 46, 0.7);
-            --border-color: rgba(0, 191, 255, 0.2);
-            --glow-color: rgba(0, 191, 255, 0.5);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-        }
-
-        /* BACKGROUND & GRID */
-        canvas {
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            /* Sits on top of the grid but behind main content */
-        }
-
-        #interactive-grid-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-            z-index: -2;
-            /* Deepest layer */
-        }
-
-        .grid-item {
-            width: 100%;
-            height: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: background-color 0.5s ease, box-shadow 0.5s ease;
-        }
-
-        .grid-item:hover {
-            background-color: var(--glow-color);
-            box-shadow: 0 0 15px var(--glow-color);
-            transition-duration: 0s;
-        }
-
-        /* HEADER */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 10%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(8, 10, 24, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-color);
-            text-decoration: none;
-        }
-
-        .logo span {
-            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .main-nav {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .main-nav .nav-link {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 8px 18px;
-            border-radius: 30px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .main-nav .nav-link:hover {
-            background: var(--primary-color);
-            color: #000;
-        }
-
-        .main-nav .btn {
-            /* Override nav-link styles for the Subscribe button */
-            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
-            color: #000 !important;
-            font-weight: 600;
-            padding: 12px 30px;
-            border-radius: 50px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .main-nav .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
-            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
-            color: #000 !important;
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            z-index: 200;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 28px;
-            height: 3px;
-            background: var(--text-color);
-            margin: 4px 0;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            top: 70px;
-            right: 10%;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            padding: 20px 30px;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 150;
-        }
-
-        .mobile-nav .nav-link {
-            display: block;
-            margin-bottom: 10px;
-            color: var(--text-color);
-            text-align: left;
-            font-size: 1.2rem;
-        }
-
-        .mobile-nav .btn {
-            width: 100%;
-            text-align: center;
-        }
-
-        /* GENERAL STYLES & UTILITIES */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 20px;
-        }
-
-        section {
-            position: relative;
-            z-index: 1;
-        }
-
-        h1,
-        h2,
-        h3 {
-            font-weight: 600;
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 50px;
-            color: var(--text-color);
-        }
-
-        h2 span {
-            color: var(--primary-color);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
-            color: #000;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 50px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
-        }
-
-        /* HERO SECTION */
-        .hero {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            min-height: 100vh;
-            padding: 0 20px;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-        }
-
-        .hero-content h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 20px;
-        }
-
-        .hero-content h1 span {
-            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-
-        /* ABOUT SECTION */
-        .about-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
-        }
-
-        .features-list {
-            list-style: none;
-            max-width: 700px;
-        }
-
-        .features-list li {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .features-list li:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px var(--glow-color);
-        }
-
-        .features-list i {
-            font-size: 1.5rem;
-            color: var(--secondary-color);
-            min-width: 30px;
-            text-align: center;
-        }
-
-        /* PR STUNT / INTELLECTUAL CHALLENGE SECTION */
-        .pr-stunt-section {
-            padding-top: 50px;
-            padding-bottom: 50px;
-        }
-
-        .terminal {
-            background: rgba(10, 12, 24, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 0 40px rgba(0, 191, 255, 0.2);
-            backdrop-filter: blur(5px);
-            overflow: hidden;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        .terminal-header {
-            background: #1a1d2e;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .terminal-buttons {
-            display: flex;
-        }
-
-        .terminal-buttons span {
-            display: block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .btn-close {
-            background: #ff5f56;
-        }
-
-        .btn-min {
-            background: #ffbd2e;
-        }
-
-        .btn-max {
-            background: #27c93f;
-        }
-
-        .terminal-title {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin: 0 auto;
-        }
-
-        .terminal-body {
-            padding: 20px;
-            min-height: 250px;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #00ff41;
-            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-        }
-
-        .terminal-body .line {
-            white-space: pre-wrap;
-        }
-
-        .terminal-body .line.highlight {
-            color: var(--accent-yellow);
-        }
-
-        .cursor {
-            display: inline-block;
-            background: #00ff41;
-            animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-
-            from,
-            to {
-                background: transparent;
-            }
-
-            50% {
-                background: #00ff41;
-            }
-        }
-
-        .puzzle-container {
-            display: none;
-            padding: 0 20px 20px 20px;
-        }
-
-        .puzzle-container.visible {
-            display: block;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-
-        .input-group label {
-            margin-right: 10px;
-            color: #00ff41;
-        }
-
-        .input-group input[type="text"] {
-            flex-grow: 1;
-            background: #080a18;
-            border: 1px solid #00ff41;
-            color: #00ff41;
-            padding: 8px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1rem;
-            outline: none;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-        }
-
-        .decrypt-btn {
-            background: #00ff41;
-            color: #080a18;
-            border: none;
-            padding: 9px 15px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            margin-left: 10px;
-            transition: background 0.3s, color 0.3s;
-            cursor: pointer;
-        }
-
-        .decrypt-btn:hover {
-            background: #fff;
-        }
-
-        #terminal-message {
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .success-message {
-            color: #00ff41;
-        }
-
-        .error-message {
-            color: #ff5f56;
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20%,
-            60% {
-                transform: translateX(-5px);
-            }
-
-            40%,
-            80% {
-                transform: translateX(5px);
-            }
-        }
-
-        .video-reveal {
-            display: none;
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            background: #080a18;
-        }
-
-        .video-reveal.visible {
-            display: block;
-            animation: fadeIn 1s ease-in;
-        }
-
-        .video-reveal h3 {
-            color: var(--accent-yellow);
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .decrypted-message {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-left: 3px solid var(--accent-yellow);
-            margin-bottom: 20px;
-            color: var(--text-secondary);
-            font-style: italic;
-            text-align: center;
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 5px;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* VIDEOS SECTION */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .video-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 25px var(--glow-color);
-        }
-
-        .video-thumbnail {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-        }
-
-        .video-thumbnail iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .video-info {
-            padding: 20px;
-        }
-
-        .video-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .video-info p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        /* BLOG / INSIGHTS SECTION */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .blog-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .blog-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px var(--glow-color);
-        }
-
-        .blog-card h3 {
-            color: var(--secondary-color);
-            margin-bottom: 15px;
-        }
-
-        .blog-card p {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .read-more {
-            color: var(--accent-yellow);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .read-more:hover {
-            text-decoration: underline;
-        }
-
-        /* CTA SECTION */
-        .cta-section {
-            text-align: center;
-            background: linear-gradient(rgba(8, 10, 24, 0.9), rgba(8, 10, 24, 0.9)), url('https://source.unsplash.com/random/1600x900/?abstract,cyberpunk') no-repeat center center/cover;
-            padding: 80px 20px;
-            border-radius: 15px;
-            margin: 0 5%;
-        }
-
-        .cta-section h2 {
-            margin-bottom: 20px;
-        }
-
-        .cta-section p {
-            max-width: 600px;
-            margin: 0 auto 30px;
-            color: var(--text-secondary);
-        }
-
-        /* FOOTER */
-        footer {
-            padding: 40px 10%;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-            margin-top: 100px;
-        }
-
-        .social-links a {
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            margin: 0 15px;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--secondary-color);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            margin-top: 20px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .copyright span {
-            color: var(--primary-color);
-        }
-
-        /* RESPONSIVENESS */
-        @media (max-width: 900px) {
-            header {
-                padding: 20px 5%;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .main-nav {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Background Elements -->
-    <div id="interactive-grid-container"></div>
-
-    <header>
-        <a href="{{ url_for('index') }}" class="logo">Ani<span>preneur</span></a>
-        <nav class="main-nav">
-            <a href="{{ url_for('blog') }}" class="nav-link">Blog</a>
-            <a href="{{ url_for('social_links') }}" class="nav-link">Links</a>
-            <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn nav-link">Subscribe Now</a>
-        </nav>
-        <div class="hamburger" id="hamburger-menu" tabindex="0" aria-label="Open menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
+{% extends "base.html" %}
+
+{% block title %}Anipreneur - Decode Anime, Master Life{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="hero" id="home">
+    <div class="hero-content" data-aos="fade-in" data-aos-delay="200">
+        <h1>Decode Anime. <span>Master Real Life.</span></h1>
+        <p>Anipreneur decodes characters and concepts from your favorite anime to give you actionable strategies
+            for self-improvement, learning, and psychology.</p>
+        <a href="#about" class="btn">Learn More <i class="fas fa-arrow-down"></i></a>
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section id="about" class="container">
+    <h2 data-aos="fade-up">What to <span>Expect</span></h2>
+    <div class="about-content">
+        <ul class="features-list">
+            <li data-aos="fade-up" data-aos-delay="100"><i class="fas fa-user-ninja"></i>
+                <div>
+                    <h3>In-depth Character Breakdowns</h3>
+                    <p>Explore the mindset, skills, and strategies of characters like Ayanokoji, Lelouch, and
+                        Light Yagami.</p>
+                </div>
+            </li>
+            <li data-aos="fade-up" data-aos-delay="200"><i class="fas fa-brain"></i>
+                <div>
+                    <h3>Anime Concept Analysis</h3>
+                    <p>We analyze key anime concepts and show you how they apply to self-improvement, learning,
+                        and psychology.</p>
+                </div>
+            </li>
+            <li data-aos="fade-up" data-aos-delay="300"><i class="fas fa-gamepad"></i>
+                <div>
+                    <h3>Actionable Life Guides</h3>
+                    <p>Get practical, step-by-step guides inspired by anime to help you level up your own life.
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- PR STUNT / INTELLECTUAL CHALLENGE SECTION -->
+<section id="pr-stunt" class="container pr-stunt-section">
+    <div class="terminal" data-aos="zoom-in" data-aos-anchor="#pr-stunt">
+        <div class="terminal-header">
+            <div class="terminal-buttons"><span class="btn-close"></span><span class="btn-min"></span><span
+                    class="btn-max"></span></div>
+            <div class="terminal-title">AYANOKOJI_PROTOCOLS.EXE</div>
         </div>
-        <div class="mobile-nav" id="mobile-nav">
-            <a href="{{ url_for('blog') }}" class="nav-link">Blog</a>
-            <a href="{{ url_for('social_links') }}" class="nav-link">Links</a>
-            <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn nav-link">Subscribe Now</a>
+        <div class="terminal-body" id="terminal-body"><span class="cursor" id="cursor">█</span></div>
+        <div class="puzzle-container" id="puzzle-container">
+            <div id="terminal-message"></div>
+            <div class="input-group"><label for="decryption-key">> Enter Decryption Key:</label><input type="text"
+                    id="decryption-key" name="decryption-key" autocomplete="off"><button class="decrypt-btn"
+                    id="decrypt-btn">DECRYPT</button></div>
         </div>
-    </header>
-
-    <main>
-        <!-- HERO SECTION -->
-        <section class="hero" id="home">
-            <div class="hero-content" data-aos="fade-in" data-aos-delay="200">
-                <h1>Decode Anime. <span>Master Real Life.</span></h1>
-                <p>Anipreneur decodes characters and concepts from your favorite anime to give you actionable strategies
-                    for self-improvement, learning, and psychology.</p>
-                <a href="#about" class="btn">Learn More <i class="fas fa-arrow-down"></i></a>
-            </div>
-        </section>
-
-        <!-- ABOUT SECTION -->
-        <section id="about" class="container">
-            <h2 data-aos="fade-up">What to <span>Expect</span></h2>
-            <div class="about-content">
-                <ul class="features-list">
-                    <li data-aos="fade-up" data-aos-delay="100"><i class="fas fa-user-ninja"></i>
-                        <div>
-                            <h3>In-depth Character Breakdowns</h3>
-                            <p>Explore the mindset, skills, and strategies of characters like Ayanokoji, Lelouch, and
-                                Light Yagami.</p>
-                        </div>
-                    </li>
-                    <li data-aos="fade-up" data-aos-delay="200"><i class="fas fa-brain"></i>
-                        <div>
-                            <h3>Anime Concept Analysis</h3>
-                            <p>We analyze key anime concepts and show you how they apply to self-improvement, learning,
-                                and psychology.</p>
-                        </div>
-                    </li>
-                    <li data-aos="fade-up" data-aos-delay="300"><i class="fas fa-gamepad"></i>
-                        <div>
-                            <h3>Actionable Life Guides</h3>
-                            <p>Get practical, step-by-step guides inspired by anime to help you level up your own life.
-                            </p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- PR STUNT / INTELLECTUAL CHALLENGE SECTION -->
-        <section id="pr-stunt" class="container pr-stunt-section">
-            <div class="terminal" data-aos="zoom-in" data-aos-anchor="#pr-stunt">
-                <div class="terminal-header">
-                    <div class="terminal-buttons"><span class="btn-close"></span><span class="btn-min"></span><span
-                            class="btn-max"></span></div>
-                    <div class="terminal-title">AYANOKOJI_PROTOCOLS.EXE</div>
-                </div>
-                <div class="terminal-body" id="terminal-body"><span class="cursor" id="cursor">█</span></div>
-                <div class="puzzle-container" id="puzzle-container">
-                    <div id="terminal-message"></div>
-                    <div class="input-group"><label for="decryption-key">> Enter Decryption Key:</label><input
-                            type="text" id="decryption-key" name="decryption-key" autocomplete="off"><button
-                            class="decrypt-btn" id="decrypt-btn">DECRYPT</button></div>
-                </div>
-                <div class="video-reveal" id="video-reveal">
-                    <h3>// DECRYPTION SUCCESSFUL: PROJECT_NIGHTFALL.MP4</h3>
-                    <div class="decrypted-message" id="decrypted-message"></div>
-                    <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/j6GACVRWGSU"
-                            title="Secret Video" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FEATURED VIDEOS SECTION -->
-        <section id="videos" class="container">
-            <h2 data-aos="fade-up">Featured <span>Videos</span></h2>
-            <div class="video-grid">
-                <div class="video-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="video-thumbnail"><iframe src="https://www.youtube.com/embed/71Rx3T9ZpSA"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe></div>
-                    <div class="video-info">
-                        <h3>The Ayanokoji Mindset: A Deep Dive</h3>
-                        <p>Unpacking the cold, calculated, and effective strategies of the Classroom of the Elite's
-                            protagonist.</p>
-                    </div>
-                </div>
-                <div class="video-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="video-thumbnail"><iframe src="https://www.youtube.com/embed/tKVOPeieUdI"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe></div>
-                    <div class="video-info">
-                        <h3>Leveling Up: How Isekai Teaches Real-World Skills</h3>
-                        <p>Beyond the tropes, what can we learn from isekai protagonists about rapid skill acquisition
-                            and adaptation?</p>
-                    </div>
-                </div>
-                <div class="video-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="video-thumbnail"><iframe src="https://www.youtube.com/embed/2PuK8iMUbiI"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe></div>
-                    <div class="video-info">
-                        <h3>The Psychology of Shonen: Beyond 'Friendship Power'</h3>
-                        <p>A look into the psychological principles of resilience, grit, and motivation that power our
-                            favorite heroes.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- BLOG/INSIGHTS TEASER -->
-        <section id="blog" class="container">
-            <h2 data-aos="fade-up">Insights & <span>Strategies</span></h2>
-            <div class="blog-grid">
-                <div class="blog-card" data-aos="fade-up" data-aos-delay="100">
-                    <h3>[Coming Soon] The Art of Manipulation vs. Influence</h3>
-                    <p>A comparative analysis of Lelouch vi Britannia and Naruto Uzumaki's methods of leadership.</p><a
-                        href="{{ url_for('blog') }}" class="read-more">Read More →</a>
-                </div>
-                <div class="blog-card" data-aos="fade-up" data-aos-delay="200">
-                    <h3>[Coming Soon] Applying 'The Flow State' like a Sports Anime Pro</h3>
-                    <p>How to enter a state of peak performance by learning from characters in Haikyuu!! and Kuroko's
-                        Basketball.</p><a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
-                </div>
-                <div class="blog-card" data-aos="fade-up" data-aos-delay="300">
-                    <h3>[Coming Soon] Building Your Own 'Nakama': The Science of Strong Bonds</h3>
-                    <p>Lessons from the Straw Hat Pirates on building a loyal and effective team in your personal and
-                        professional life.</p><a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- FINAL CTA -->
-        <section class="container">
-            <div class="cta-section" data-aos="zoom-in">
-                <h2>Ready to Master the Game?</h2>
-                <p>Subscribe for regular insights and join a community dedicated to turning anime wisdom into real-life
-                    success. Your journey starts now.</p>
-                <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn">Subscribe on YouTube <i
-                        class="fab fa-youtube"></i></a>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="social-links">
-            <a href="https://www.youtube.com/@Anipreneur" target="_blank" aria-label="YouTube"><i
-                    class="fab fa-youtube"></i></a>
-            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <div class="video-reveal" id="video-reveal">
+            <h3>// DECRYPTION SUCCESSFUL: PROJECT_NIGHTFALL.MP4</h3>
+            <div class="decrypted-message" id="decrypted-message"></div>
+            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/j6GACVRWGSU" title="Secret Video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe></div>
         </div>
-        <p class="copyright">©
-            <script>document.write(new Date().getFullYear());</script> <span>Anipreneur</span>. All Rights Reserved.
-        </p>
-    </footer>
+    </div>
+</section>
 
-    <!-- AOS Library -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- FEATURED VIDEOS SECTION -->
+<section id="videos" class="container">
+    <h2 data-aos="fade-up">Featured <span>Videos</span></h2>
+    <div class="video-grid">
+        <div class="video-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="video-thumbnail"><iframe src="https://www.youtube.com/embed/71Rx3T9ZpSA"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe></div>
+            <div class="video-info">
+                <h3>The Ayanokoji Mindset: A Deep Dive</h3>
+                <p>Unpacking the cold, calculated, and effective strategies of the Classroom of the Elite's
+                    protagonist.</p>
+            </div>
+        </div>
+        <div class="video-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="video-thumbnail"><iframe src="https://www.youtube.com/embed/tKVOPeieUdI"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe></div>
+            <div class="video-info">
+                <h3>Leveling Up: How Isekai Teaches Real-World Skills</h3>
+                <p>Beyond the tropes, what can we learn from isekai protagonists about rapid skill acquisition
+                    and adaptation?</p>
+            </div>
+        </div>
+        <div class="video-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="video-thumbnail"><iframe src="https://www.youtube.com/embed/2PuK8iMUbiI"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe></div>
+            <div class="video-info">
+                <h3>The Psychology of Shonen: Beyond 'Friendship Power'</h3>
+                <p>A look into the psychological principles of resilience, grit, and motivation that power our
+                    favorite heroes.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <!-- Import Map for Three.js -->
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
-        }
-    }
-    </script>
+<!-- BLOG/INSIGHTS TEASER -->
+<section id="blog" class="container">
+    <h2 data-aos="fade-up">Insights & <span>Strategies</span></h2>
+    <div class="blog-grid">
+        <div class="blog-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>[Coming Soon] The Art of Manipulation vs. Influence</h3>
+            <p>A comparative analysis of Lelouch vi Britannia and Naruto Uzumaki's methods of leadership.</p><a
+                href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+        </div>
+        <div class="blog-card" data-aos="fade-up" data-aos-delay="200">
+            <h3>[Coming Soon] Applying 'The Flow State' like a Sports Anime Pro</h3>
+            <p>How to enter a state of peak performance by learning from characters in Haikyuu!! and Kuroko's
+                Basketball.</p><a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+        </div>
+        <div class="blog-card" data-aos="fade-up" data-aos-delay="300">
+            <h3>[Coming Soon] Building Your Own 'Nakama': The Science of Strong Bonds</h3>
+            <p>Lessons from the Straw Hat Pirates on building a loyal and effective team in your personal and
+                professional life.</p><a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+        </div>
+    </div>
+</section>
 
-    <!-- Custom JS -->
-    <script type="module">
-        import * as THREE from 'three';
+<!-- FINAL CTA -->
+<section class="container">
+    <div class="cta-section" data-aos="zoom-in">
+        <h2>Ready to Master the Game?</h2>
+        <p>Subscribe for regular insights and join a community dedicated to turning anime wisdom into real-life
+            success. Your journey starts now.</p>
+        <a href="https://www.youtube.com/@Anipreneur" target="_blank" class="btn">Subscribe on YouTube <i
+                class="fab fa-youtube"></i></a>
+    </div>
+</section>
+{% endblock %}
 
-        // --- Initialize Base Website Scripts ---
-        AOS.init({ duration: 800, once: true, offset: 50 });
-        const gridContainer = document.getElementById('interactive-grid-container');
-        for (let i = 0; i < 1000; i++) { const el = document.createElement('div'); el.classList.add('grid-item'); gridContainer.appendChild(el); }
-        const terminalBody = document.getElementById("terminal-body"), cursor = document.getElementById("cursor"), puzzleContainer = document.getElementById("puzzle-container"), terminalMessage = document.getElementById("terminal-message"), keyInput = document.getElementById("decryption-key"), decryptBtn = document.getElementById("decrypt-btn"), videoReveal = document.getElementById("video-reveal"), decryptedMessageContainer = document.getElementById("decrypted-message"), prStuntSection = document.getElementById("pr-stunt"), CORRECT_KEY = "MANIPULATE", DECRYPTED_MESSAGE = "True mastery isn't about the cards you're dealt, but how you play the hand.", linesToType = [{ text: "Booting AYANOKOJI_PROTOCOLS.EXE...", delay: 50 }, { text: "Bypassing security layers... Done.", delay: 50 }, { text: "Accessing encrypted file: [PROJECT_NIGHTFALL]", delay: 50 }, { text: "...", delay: 500 }, { text: "FILE CONTENTS:", delay: 50, class: "highlight" }, { text: "XLI GVYI QEXXIV MW RSX E TEWWZI XSSPM RKIVC XS FI AMIPHIH FYX E JSVGI XS FI WLETIH.", delay: 20 }, { text: "...", delay: 500 }, { text: "DECRYPTION HINT:", delay: 50, class: "highlight" }, { text: "The key is the ultimate tool of the puppet master.", delay: 50 }, { text: "Awaiting user input...", delay: 50 }]; let lineIndex = 0; function typeLine() { if (lineIndex < linesToType.length) { const e = linesToType[lineIndex], t = document.createElement("div"); t.classList.add("line"), e.class && t.classList.add(e.class); let a = 0; terminalBody.insertBefore(t, cursor), function l() { a < e.text.length ? (t.innerHTML += e.text.charAt(a), a++, terminalBody.scrollTop = terminalBody.scrollHeight, setTimeout(l, e.delay / 2)) : (lineIndex++, setTimeout(typeLine, 2 * e.delay)) }() } else cursor.style.display = "none", puzzleContainer.classList.add("visible"), keyInput.focus() } function handleDecryption() { const e = keyInput.value.toUpperCase().trim(); e === CORRECT_KEY ? (terminalMessage.textContent = "ACCESS GRANTED. DECRYPTION SUCCESSFUL.", terminalMessage.className = "success-message", puzzleContainer.style.display = "none", decryptedMessageContainer.textContent = `"${DECRYPTED_MESSAGE}"`, videoReveal.classList.add("visible")) : (terminalMessage.textContent = "ACCESS DENIED. KEY INCORRECT. SECURITY ALERT TRIGGERED.", terminalMessage.className = "error-message", keyInput.value = "", keyInput.focus()) } decryptBtn.addEventListener("click", handleDecryption), keyInput.addEventListener("keyup", e => { e.key === "Enter" && handleDecryption() }); const observer = new IntersectionObserver(e => { e.forEach(e => { e.isIntersecting && (setTimeout(typeLine, 500), observer.unobserve(e.target)) }) }, { threshold: .5 }); observer.observe(prStuntSection);
+{% block extra_scripts %}
+// Terminal puzzle functionality
+const terminalBody = document.getElementById("terminal-body"),
+cursor = document.getElementById("cursor"),
+puzzleContainer = document.getElementById("puzzle-container"),
+terminalMessage = document.getElementById("terminal-message"),
+keyInput = document.getElementById("decryption-key"),
+decryptBtn = document.getElementById("decrypt-btn"),
+videoReveal = document.getElementById("video-reveal"),
+decryptedMessageContainer = document.getElementById("decrypted-message"),
+prStuntSection = document.getElementById("pr-stunt"),
+CORRECT_KEY = "MANIPULATE",
+DECRYPTED_MESSAGE = "True mastery isn't about the cards you're dealt, but how you play the hand.",
+linesToType = [
+{ text: "Booting AYANOKOJI_PROTOCOLS.EXE...", delay: 50 },
+{ text: "Bypassing security layers... Done.", delay: 50 },
+{ text: "Accessing encrypted file: [PROJECT_NIGHTFALL]", delay: 50 },
+{ text: "...", delay: 500 },
+{ text: "FILE CONTENTS:", delay: 50, class: "highlight" },
+{ text: "XLI GVYI QEXXIV MW RSX E TEWWZI XSSPM RKIVC XS FI AMIPHIH FYX E JSVGI XS FI WLETIH.", delay: 20 },
+{ text: "...", delay: 500 },
+{ text: "DECRYPTION HINT:", delay: 50, class: "highlight" },
+{ text: "The key is the ultimate tool of the puppet master.", delay: 50 },
+{ text: "Awaiting user input...", delay: 50 }
+];
 
+let lineIndex = 0;
 
-        // --- NEW 3D PARTICLE GLOBE BACKGROUND SCRIPT ---
+function typeLine() {
+if (lineIndex < linesToType.length) { const e=linesToType[lineIndex], t=document.createElement("div");
+    t.classList.add("line"), e.class && t.classList.add(e.class); let a=0; terminalBody.insertBefore(t, cursor),
+    function l() { a < e.text.length ? (t.innerHTML +=e.text.charAt(a), a++,
+    terminalBody.scrollTop=terminalBody.scrollHeight, setTimeout(l, e.delay / 2)) : (lineIndex++, setTimeout(typeLine, 2
+    * e.delay)) }() } else cursor.style.display="none" , puzzleContainer.classList.add("visible"), keyInput.focus() }
+    function handleDecryption() { const e=keyInput.value.toUpperCase().trim(); e===CORRECT_KEY ?
+    (terminalMessage.textContent="ACCESS GRANTED. DECRYPTION SUCCESSFUL." , terminalMessage.className="success-message"
+    , puzzleContainer.style.display="none" , decryptedMessageContainer.textContent=`"${DECRYPTED_MESSAGE}"`,
+    videoReveal.classList.add("visible")) :
+    (terminalMessage.textContent="ACCESS DENIED. KEY INCORRECT. SECURITY ALERT TRIGGERED." ,
+    terminalMessage.className="error-message" , keyInput.value="" , keyInput.focus()) }
+    decryptBtn.addEventListener("click", handleDecryption), keyInput.addEventListener("keyup", e=> { e.key === "Enter"
+    && handleDecryption() });
 
-        // --- Core Scene Components ---
-        let scene, camera, renderer;
-        let particles;
-        let rotationGroup; // <<< ADD THIS LINE
+    const observer = new IntersectionObserver(e => {
+    e.forEach(e => {
+    e.isIntersecting && (setTimeout(typeLine, 500), observer.unobserve(e.target))
+    })
+    }, { threshold: .5 });
 
-        // --- Interaction Variables ---
-        let mouseX = 0, mouseY = 0; // Stores normalized mouse position (-1 to 1)
-        let explosionProgress = 0;   // Stores explosion state (0 = intact, 1 = exploded)
-
-        // --- Particle Data Storage ---
-        const originalPositions = [];
-        const randomPositions = [];
-
-        // --- Constants ---
-        const PARTICLE_COUNT = 5000;
-        const GLOBE_RADIUS = 5;
-        const EXPLOSION_RADIUS = 15;
-        const ROTATION_SPEED = 0.5;
-        const EASING_FACTOR = 0.05;
-
-        // --- Initialization ---
-        function initGlobe() {
-            // 1. Scene
-            scene = new THREE.Scene();
-            rotationGroup = new THREE.Group(); // <<< ADD THIS LINE
-            scene.add(rotationGroup);          // <<< ADD THIS LINE
-            // 2. Camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 12;
-
-            // 3. Renderer
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // alpha:true for transparent background
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            document.body.appendChild(renderer.domElement);
-
-            // 4. Create Particles
-            createParticles();
-
-            // 5. Event Listeners
-            window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('resize', onWindowResize);
-        }
-
-        // --- Particle Creation ---
-        function createParticles() {
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(PARTICLE_COUNT * 3);
-
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                const i_float = i + 0.5;
-                const phi = Math.acos(1 - 2 * i_float / PARTICLE_COUNT);
-                const theta = Math.PI * (1 + Math.sqrt(5)) * i_float;
-
-                const x = GLOBE_RADIUS * Math.cos(theta) * Math.sin(phi);
-                const y = GLOBE_RADIUS * Math.sin(theta) * Math.sin(phi);
-                const z = GLOBE_RADIUS * Math.cos(phi);
-                originalPositions.push(x, y, z);
-
-                const rX = (Math.random() - 0.5) * 2 * EXPLOSION_RADIUS;
-                const rY = (Math.random() - 0.5) * 2 * EXPLOSION_RADIUS;
-                const rZ = (Math.random() - 0.5) * 2 * EXPLOSION_RADIUS;
-                randomPositions.push(rX, rY, rZ);
-
-                positions[i * 3] = x;
-                positions[i * 3 + 1] = y;
-                positions[i * 3 + 2] = z;
-            }
-
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-            const material = new THREE.PointsMaterial({
-                color: 0x00bfff, // << THEMED: Changed to match site's secondary color
-                size: 0.03, // <<< CHANGE THIS VALUE from 0.07 to something smaller like 0.03
-                blending: THREE.AdditiveBlending,
-                transparent: true,
-                depthWrite: false,
-            });
-
-            particles = new THREE.Points(geometry, material);
-            rotationGroup.add(particles); // <<< ADD THIS LINE
-        }
-
-        // --- Event Handlers ---
-        function onMouseMove(event) {
-            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-        }
-
-
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        }
-
-        // --- Animation Loop ---
-        function animateGlobe() {
-            requestAnimationFrame(animateGlobe);
-
-            // --- ADD THIS NEW LOGIC HERE ---
-            // Calculate the total scrollable height of the page
-            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-            // Get the current scroll position
-            const currentScroll = window.scrollY;
-            // Update explosionProgress based on the percentage of the page scrolled
-            // Ensure scrollableHeight is not zero to avoid division by zero errors
-            explosionProgress = scrollableHeight > 0 ? currentScroll / scrollableHeight : 0;
-            // --- END OF NEW LOGIC ---
-
-            rotationGroup.rotation.y += 0.0005; // <<< ADD THIS LINE for constant subtle rotation
-            const targetRotationX = mouseY * ROTATION_SPEED;
-            const targetRotationY = mouseX * ROTATION_SPEED;
-            particles.rotation.x += (targetRotationX - particles.rotation.x) * EASING_FACTOR;
-            particles.rotation.y += (targetRotationY - particles.rotation.y) * EASING_FACTOR;
-
-
-            const positions = particles.geometry.attributes.position;
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
-                const currentX = THREE.MathUtils.lerp(originalPositions[ix], randomPositions[ix], explosionProgress);
-                const currentY = THREE.MathUtils.lerp(originalPositions[iy], randomPositions[iy], explosionProgress);
-                const currentZ = THREE.MathUtils.lerp(originalPositions[iz], randomPositions[iz], explosionProgress);
-                positions.setXYZ(i, currentX, currentY, currentZ);
-
-            }
-            positions.needsUpdate = true;
-
-            renderer.render(scene, camera);
-        }
-
-        // --- Start The Globe ---
-        initGlobe();
-        animateGlobe();
-
-        // Hamburger menu toggle
-        const hamburger = document.getElementById('hamburger-menu');
-        const mobileNav = document.getElementById('mobile-nav');
-        hamburger.addEventListener('click', function () {
-            const expanded = hamburger.getAttribute('aria-expanded') === 'true';
-            hamburger.setAttribute('aria-expanded', !expanded);
-            mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
-        });
-        // Close mobile nav on outside click
-        document.addEventListener('click', function (e) {
-            if (!hamburger.contains(e.target) && !mobileNav.contains(e.target)) {
-                mobileNav.style.display = 'none';
-                hamburger.setAttribute('aria-expanded', false);
-            }
-        });
-
-    </script>
-</body>
-
-</html>
+    observer.observe(prStuntSection);
+    {% endblock %}
