@@ -1114,29 +1114,10 @@
 
         // Smooth scroll to top when button is clicked
         scrollToTopBtn.addEventListener('click', function () {
-            const currentPosition = window.pageYOffset || document.documentElement.scrollTop;
-            const targetPosition = 0;
-            const distance = targetPosition - currentPosition;
-            const duration = 2000; // 2 seconds for slower scroll
-            let start = null;
-
-            function animation(currentTime) {
-                if (start === null) start = currentTime;
-                const timeElapsed = currentTime - start;
-                const run = easeInOutCubic(timeElapsed, currentPosition, distance, duration);
-                window.scrollTo(0, run);
-                if (timeElapsed < duration) requestAnimationFrame(animation);
-            }
-
-            // Easing function for smooth animation
-            function easeInOutCubic(t, b, c, d) {
-                t /= d / 2;
-                if (t < 1) return c / 2 * t * t * t + b;
-                t -= 2;
-                return c / 2 * (t * t * t + 2) + b;
-            }
-
-            requestAnimationFrame(animation);
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
 
         // Additional block for page-specific scripts

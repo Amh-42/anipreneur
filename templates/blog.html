@@ -3,26 +3,70 @@
 {% block title %}Blog - Anipreneur{% endblock %}
 
 {% block extra_styles %}
-/* --- NEW STYLES FOR BLOG POST --- */
-.blog-post-container {
-max-width: 900px;
-margin: 0 auto;
-padding: 150px 20px 50px;
+/* HERO SECTION */
+.hero {
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 20px;
 position: relative;
 z-index: 2;
 }
 
-.post-header h1 {
-font-size: 3.5rem;
+.hero-content {
+max-width: 800px;
+}
+
+.hero-content h1 {
+font-size: 4rem;
+font-weight: 700;
+margin-bottom: 30px;
+line-height: 1.2;
+}
+
+.hero-content h1 span {
+background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.hero-content p {
+font-size: 1.3rem;
+color: var(--text-secondary);
+margin-bottom: 40px;
+line-height: 1.6;
+max-width: 600px;
+margin-left: auto;
+margin-right: auto;
+}
+
+/* BLOG POST STYLES */
+.blog-post-container {
+max-width: 900px;
+margin: 0 auto;
+padding: 50px 20px;
+position: relative;
+z-index: 2;
+}
+
+.post-header h2 {
+font-size: 2.5rem;
 line-height: 1.2;
 text-align: center;
 margin-bottom: 20px;
 }
 
-.post-header h1 span {
-background: linear-gradient(45deg, var(--secondary-color), var(--accent-yellow));
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
+.post-header h2 a {
+color: inherit;
+text-decoration: none;
+transition: color 0.3s ease;
+}
+
+.post-header h2 a:hover {
+color: var(--primary-color);
 }
 
 .post-header h2 a span {
@@ -106,6 +150,17 @@ margin-top: 60px;
 margin-bottom: 80px;
 padding-bottom: 40px;
 border-bottom: 1px solid var(--border-color);
+background: var(--card-bg);
+border-radius: 15px;
+padding: 30px;
+backdrop-filter: blur(10px);
+border: 1px solid var(--border-color);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-post:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2);
 }
 
 .blog-post:last-child {
@@ -123,6 +178,10 @@ gap: 20px;
 .no-posts {
 text-align: center;
 padding: 100px 20px;
+background: var(--card-bg);
+border-radius: 15px;
+backdrop-filter: blur(10px);
+border: 1px solid var(--border-color);
 }
 
 .no-posts h2 {
@@ -136,8 +195,16 @@ font-size: 1.1rem;
 }
 
 @media (max-width: 768px) {
-.post-header h1 {
+.hero-content h1 {
 font-size: 2.5rem;
+}
+
+.hero-content p {
+font-size: 1.1rem;
+}
+
+.post-header h2 {
+font-size: 2rem;
 }
 
 .featured-image {
@@ -148,16 +215,30 @@ height: 300px;
 flex-direction: column;
 gap: 15px;
 }
+
+.blog-post {
+padding: 20px;
+}
 }
 {% endblock %}
 
 {% block content %}
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-content" data-aos="fade-up">
+        <h1>Anime <span>Insights</span> & Strategies</h1>
+        <p>Deep dives into anime characters, psychological analysis, and actionable life lessons. Discover how your
+            favorite anime can transform your mindset and approach to life.</p>
+    </div>
+</section>
+
+<!-- BLOG POSTS SECTION -->
 <div class="blog-post-container">
     {% if posts.items %}
     {% for post in posts.items %}
     <div class="blog-post" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
         <div class="post-header">
-            <h2><a href="{{ url_for('post_detail', slug=post.slug) }}" style="color: inherit; text-decoration: none;">{{
+            <h2><a href="{{ url_for('post_detail', slug=post.slug) }}">{{
                     post.title | safe }}</a></h2>
             <div class="post-meta">
                 <span>By {{ post.author.username }}</span> |
