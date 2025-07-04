@@ -826,6 +826,53 @@
             color: var(--primary-color);
         }
 
+        /* SCROLL TO TOP ARROW */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+        }
+
+        .scroll-to-top i {
+            color: #000;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
         /* Additional block for page-specific styles */
             {
             % block extra_styles %
@@ -879,6 +926,11 @@
             <script>document.write(new Date().getFullYear());</script> <span>Anipreneur</span>. All Rights Reserved.
         </p>
     </footer>
+
+    <!-- Scroll to Top Arrow -->
+    <div class="scroll-to-top" id="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
     <!-- AOS Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -1041,6 +1093,50 @@
                 mobileNav.style.display = 'none';
                 hamburger.setAttribute('aria-expanded', false);
             }
+        });
+
+        // --- SCROLL TO TOP FUNCTIONALITY ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top');
+        const heroSection = document.querySelector('main');
+
+        // Show/hide scroll to top button based on scroll position
+        window.addEventListener('scroll', function () {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const heroHeight = heroSection ? heroSection.offsetHeight : window.innerHeight;
+
+            // Show button after scrolling past hero section
+            if (scrollTop > heroHeight * 0.5) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        // Smooth scroll to top when button is clicked
+        scrollToTopBtn.addEventListener('click', function () {
+            const currentPosition = window.pageYOffset || document.documentElement.scrollTop;
+            const targetPosition = 0;
+            const distance = targetPosition - currentPosition;
+            const duration = 2000; // 2 seconds for slower scroll
+            let start = null;
+
+            function animation(currentTime) {
+                if (start === null) start = currentTime;
+                const timeElapsed = currentTime - start;
+                const run = easeInOutCubic(timeElapsed, currentPosition, distance, duration);
+                window.scrollTo(0, run);
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+
+            // Easing function for smooth animation
+            function easeInOutCubic(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t * t + b;
+                t -= 2;
+                return c / 2 * (t * t * t + 2) + b;
+            }
+
+            requestAnimationFrame(animation);
         });
 
         // Additional block for page-specific scripts
