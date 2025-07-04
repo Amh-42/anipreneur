@@ -969,7 +969,7 @@
         const randomPositions = [];
 
         // --- Constants ---
-        const PARTICLE_COUNT = 600;
+        const PARTICLE_COUNT = 5000;
         const GLOBE_RADIUS = 5;
         const EXPLOSION_RADIUS = 15;
         const ROTATION_SPEED = 0.5;
@@ -997,70 +997,8 @@
 
         // --- Particle Creation ---
         function createParticles() {
-            // Shonen, strong characters, and business/entrepreneurship concepts
-            const animeConcepts = [
-                // Strong Characters
-                'Ayanokoji', 'Tanjiro', 'Eren', 'Light Yagami', 'Gojo', 'Lelouch', 'Guts', 'Saitama', 'Gon', 'Killua',
-                'Levi', 'Mikasa', 'Bakugo', 'Deku', 'All Might', 'Naruto', 'Sasuke', 'Itachi', 'Madara', 'Kakashi',
-                'Zoro', 'Luffy', 'Sanji', 'Shanks', 'Ichigo', 'Kenpachi', 'Yoruichi', 'Todoroki', 'Mob', 'Reigen',
-                'Escanor', 'Meliodas', 'Kurapika', 'Hisoka', 'Meruem', 'Toguro', 'Yusuke', 'Hiei', 'Kenshin',
-                'Alucard', 'Spike Spiegel', 'Vash', 'Edward Elric', 'Roy Mustang', 'Erwin Smith', 'Kamina',
-                // Shonen/Strong Concepts
-                'The Basement', 'The White Room', 'Blue Lock', 'Cadet Training', 'Chunin Exams', 'U.A. Sports Festival',
-                'Philosopher\'s Stone', 'Bankai', 'Domain Expansion', 'Nen', 'Quirk', 'Devil Fruit', 'Haki', 'Stand',
-                'Requiem', 'Sin of Pride', 'Sin of Wrath', 'Full Counter', 'Limit Break', 'Ultra Instinct',
-                'Gear Fourth', 'Susanoo', 'Mangekyo Sharingan', 'Rasengan', 'Kamehameha', 'Spirit Bomb',
-                'Death Note', 'Geass', 'Zero Requiem', 'Gate of Babylon', 'Unlimited Blade Works',
-                // Business/Entrepreneurship Concepts
-                'Strategy', 'Discipline', 'Growth', 'Mindset', 'Leadership', 'Innovation', 'Teamwork', 'Rivalry',
-                'Ambition', 'Legacy', 'Vision', 'Focus', 'Persistence', 'Dedication', 'Mentorship', 'Networking',
-                'Opportunity', 'Risk', 'Resilience', 'Adaptability', 'Execution', 'Creativity', 'Branding',
-                'Influence', 'Negotiation', 'Productivity', 'Learning', 'Self-Improvement', 'Goal Setting',
-                'Time Management', 'Resourcefulness', 'Problem Solving', 'Decision Making', 'Collaboration',
-                'Entrepreneur', 'Founder', 'Investor', 'Pitch', 'Startup', 'Scale Up', 'Incubator', 'Accelerator',
-                'Bootstrapping', 'Monetization', 'Market Fit', 'Pivot', 'Disruptor', 'Visionary', 'Hustle',
-                'Execution', 'Dream', 'Passion', 'Drive', 'Grit', 'Breakthrough', 'Synergy', 'Value', 'Mission',
-                'Purpose', 'Ownership', 'Accountability', 'Learning Curve', 'Growth Mindset', 'Innovation Lab',
-                'Business Model', 'Revenue', 'Profit', 'Loss', 'Cash Flow', 'Equity', 'Valuation', 'Pitch Deck',
-                'MVP', 'Product Launch', 'Customer', 'User Experience', 'Brand Story', 'Community', 'Scaling',
-                'Mentor', 'Coach', 'Vision Board', 'North Star', 'Execution Plan', 'Milestone', 'KPI', 'OKR',
-                'Networking Event', 'Demo Day', 'Seed Round', 'Series A', 'IPO', 'Exit', 'Acquisition',
-                // More strong anime concepts
-                'Hunter Exam', 'Heaven\'s Arena', 'Chimera Ant', 'Dark Tournament', 'Spirit Detective',
-                'Red Room', 'Shadow Garden', 'Hero Association', 'Espada', 'Akatsuki', 'Survey Corps',
-                'Titans', 'Wall Maria', 'Paradise Island', 'No Regrets', 'The Rumbling', 'Founding Titan',
-                'Attack Titan', 'Colossal Titan', 'Armored Titan', 'Beast Titan', 'Cart Titan', 'Jaw Titan',
-                'War Hammer Titan', 'Paths', 'Coordinate', 'Royal Blood', 'Ymir', 'Historia', 'Reiss Family',
-                'Marley', 'Liberio', 'Warrior Unit', 'Annie Leonhart', 'Reiner Braun', 'Bertolt Hoover',
-                'Pieck Finger', 'Porco Galliard', 'Zeke Yeager', 'Grisha Yeager', 'Carla Yeager',
-                'Hange Zoe', 'Jean Kirstein', 'Connie Springer', 'Sasha Blouse', 'Floch Forster',
-                'Kenny Ackerman', 'Uri Reiss', 'Rod Reiss', 'Frieda Reiss', 'Kuchel Ackerman',
-                'Mikasa Ackerman', 'Levi Ackerman', 'Historia Reiss', 'Ymir Fritz', 'Eren Kruger',
-                'The Owl', 'Falco Grice', 'Gabi Braun', 'Colt Grice', 'Theo Magath', 'Willy Tybur',
-                'Lara Tybur', 'Kiyomi Azumabito', 'Onyankopon', 'Niccolo', 'Yelena', 'Floch',
-                'Cartman', 'Kenny', 'Sasha', 'Jean', 'Connie', 'Hange', 'Erwin', 'Levi', 'Mikasa',
-                'Eren', 'Armin', 'Historia', 'Ymir', 'Reiner', 'Bertolt', 'Annie', 'Pieck', 'Porco',
-                'Zeke', 'Grisha', 'Carla', 'Kuchel', 'Uri', 'Rod', 'Frieda', 'Falco', 'Gabi', 'Colt',
-                'Theo', 'Willy', 'Lara', 'Kiyomi', 'Onyankopon', 'Niccolo', 'Yelena',
-            ];
-
-            // Helper to cycle through all concepts before repeating
-            let conceptIndex = 0;
-            let conceptOrder = animeConcepts.slice();
-            function getNextConcept() {
-                if (conceptIndex >= conceptOrder.length) {
-                    // Shuffle for next cycle
-                    for (let i = conceptOrder.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [conceptOrder[i], conceptOrder[j]] = [conceptOrder[j], conceptOrder[i]];
-                    }
-                    conceptIndex = 0;
-                }
-                return conceptOrder[conceptIndex++];
-            }
-
-            // Create text sprites
-            const spriteGroup = new THREE.Group();
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(PARTICLE_COUNT * 3);
 
             for (let i = 0; i < PARTICLE_COUNT; i++) {
                 const i_float = i + 0.5;
@@ -1077,39 +1015,22 @@
                 const rZ = (Math.random() - 0.5) * 2 * EXPLOSION_RADIUS;
                 randomPositions.push(rX, rY, rZ);
 
-                // Create individual canvas for each sprite
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = 256;
-                canvas.height = 64;
-
-                // Clear canvas and draw text
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.fillStyle = '#00bfff';
-                context.font = 'bold 24px Arial';
-                context.textAlign = 'center';
-                context.textBaseline = 'middle';
-
-                // Get next concept
-                const text = getNextConcept();
-                context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-                // Create texture from canvas
-                const texture = new THREE.CanvasTexture(canvas);
-                const spriteMaterial = new THREE.SpriteMaterial({
-                    map: texture,
-                    transparent: true,
-                    blending: THREE.AdditiveBlending,
-                    depthWrite: false
-                });
-
-                const sprite = new THREE.Sprite(spriteMaterial);
-                sprite.position.set(x, y, z);
-                sprite.scale.set(1.5, 0.4, 1);
-                spriteGroup.add(sprite);
+                positions[i * 3] = x;
+                positions[i * 3 + 1] = y;
+                positions[i * 3 + 2] = z;
             }
 
-            particles = spriteGroup;
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const material = new THREE.PointsMaterial({
+                color: 0x00bfff,
+                size: 0.03,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                depthWrite: false,
+            });
+
+            particles = new THREE.Points(geometry, material);
             rotationGroup.add(particles);
         }
 
@@ -1140,15 +1061,15 @@
             particles.rotation.x += (targetRotationX - particles.rotation.x) * EASING_FACTOR;
             particles.rotation.y += (targetRotationY - particles.rotation.y) * EASING_FACTOR;
 
-            // Animate sprite positions
-            for (let i = 0; i < particles.children.length; i++) {
-                const sprite = particles.children[i];
+            const positions = particles.geometry.attributes.position;
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
                 const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
                 const currentX = THREE.MathUtils.lerp(originalPositions[ix], randomPositions[ix], explosionProgress);
                 const currentY = THREE.MathUtils.lerp(originalPositions[iy], randomPositions[iy], explosionProgress);
                 const currentZ = THREE.MathUtils.lerp(originalPositions[iz], randomPositions[iz], explosionProgress);
-                sprite.position.set(currentX, currentY, currentZ);
+                positions.setXYZ(i, currentX, currentY, currentZ);
             }
+            positions.needsUpdate = true;
 
             renderer.render(scene, camera);
         }
@@ -1183,7 +1104,7 @@
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const heroHeight = heroSection ? heroSection.offsetHeight : window.innerHeight;
 
-            //utton after scrolling past hero section
+            // Show button after scrolling past hero section
             if (scrollTop > heroHeight * 0.5) {
                 scrollToTopBtn.classList.add('show');
             } else {
