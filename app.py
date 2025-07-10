@@ -13,48 +13,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-change-
 app.config['FLASK_ENV'] = os.environ.get('FLASK_ENV', 'production')
 app.config['DEBUG'] = True
 
-# IP-based access control configuration
-ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1,196.189.29.152,192.168.0.125').split(',')
-ALLOWED_IPS = [ip.strip() for ip in ALLOWED_IPS if ip.strip()]
 
-# Debug mode - set to True to temporarily bypass IP restrictions
-DEBUG_MODE = os.environ.get('ADMIN_DEBUG_MODE', 'False').lower() == 'true'
-
-def admin_ip_required(f):
-    """Decorator to restrict admin access to specific IP addresses"""
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        # Skip IP check if in debug mode
-        if DEBUG_MODE:
-            app.logger.info(f'DEBUG MODE: Bypassing IP restriction for {request.endpoint}')
-            return f(*args, **kwargs)
-        
-        # Get client IP, handling proxy environments (like cPanel)
-        client_ip = request.remote_addr
-        
-        # Check for proxy headers (common in cPanel environments)
-        if request.headers.get('X-Forwarded-For'):
-            client_ip = request.headers.get('X-Forwarded-For').split(',')[0].strip()
-        elif request.headers.get('X-Real-IP'):
-            client_ip = request.headers.get('X-Real-IP')
-        elif request.headers.get('X-Client-IP'):
-            client_ip = request.headers.get('X-Client-IP')
-        elif request.headers.get('CF-Connecting-IP'):  # Cloudflare
-            client_ip = request.headers.get('CF-Connecting-IP')
-        
-        # Log the detected IP for debugging
-        app.logger.info(f'Admin access attempt from IP: {client_ip}')
-        app.logger.info(f'Headers: X-Forwarded-For={request.headers.get("X-Forwarded-For")}, X-Real-IP={request.headers.get("X-Real-IP")}')
-        
-        # Check if client IP is in allowed list
-        if client_ip not in ALLOWED_IPS:
-            # Log unauthorized access attempt
-            app.logger.warning(f'Unauthorized admin access attempt from IP: {client_ip}')
-            app.logger.warning(f'Allowed IPs: {ALLOWED_IPS}')
-            abort(403, description="Access denied. Your IP address is not authorized to access the admin panel.")
-        
-        return f(*args, **kwargs)
-    return decorated_function
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///anipreneur.db')
@@ -113,9 +72,8 @@ def post_detail(slug):
 def detail():
     return render_template('detail-page.html')
 
-# Admin routes with IP restriction
+# Admin routes
 @app.route('/admin/login', methods=['GET', 'POST'])
-@admin_ip_required
 def admin_login():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -136,7 +94,6 @@ def admin_login():
     return render_template('admin/login.html')
 
 @app.route('/admin/register', methods=['GET', 'POST'])
-@admin_ip_required
 def admin_register():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -187,7 +144,6 @@ def admin_register():
 
 @app.route('/admin/logout')
 @login_required
-@admin_ip_required
 def admin_logout():
     logout_user()
     flash('Logged out successfully!', 'success')
@@ -195,7 +151,6 @@ def admin_logout():
 
 @app.route('/admin')
 @login_required
-@admin_ip_required
 def admin_dashboard():
     post_count = Post.query.count()
     page_count = Page.query.count()
@@ -211,7 +166,6 @@ def admin_dashboard():
 # Admin management routes
 @app.route('/admin/users')
 @login_required
-@admin_ip_required
 def admin_users():
     if not current_user.is_admin:
         flash('Access denied. Admin privileges required.', 'error')
@@ -222,7 +176,6 @@ def admin_users():
 
 @app.route('/admin/users/<int:user_id>/approve', methods=['POST'])
 @login_required
-@admin_ip_required
 def approve_user(user_id):
     if not current_user.is_admin:
         flash('Access denied. Admin privileges required.', 'error')
@@ -237,7 +190,6 @@ def approve_user(user_id):
 
 @app.route('/admin/users/<int:user_id>/reject', methods=['POST'])
 @login_required
-@admin_ip_required
 def reject_user(user_id):
     if not current_user.is_admin:
         flash('Access denied. Admin privileges required.', 'error')
@@ -253,14 +205,12 @@ def reject_user(user_id):
 # Post management
 @app.route('/admin/posts')
 @login_required
-@admin_ip_required
 def admin_posts():
     posts = Post.query.order_by(Post.created_at.desc()).all()
     return render_template('admin/posts.html', posts=posts)
 
 @app.route('/admin/posts/new', methods=['GET', 'POST'])
 @login_required
-@admin_ip_required
 def admin_new_post():
     if request.method == 'POST':
         title = request.form.get('title')
@@ -288,7 +238,6 @@ def admin_new_post():
 
 @app.route('/admin/posts/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
-@admin_ip_required
 def admin_edit_post(id):
     post = Post.query.get_or_404(id)
     
@@ -307,9 +256,8 @@ def admin_edit_post(id):
     
     return render_template('admin/post_form.html', post=post)
 
-@app.route('/admin/posts/<int:id>/delete', methods=['POST'])
+@app.route('/admin/posts/<int:id>/delete', methods=['GET', 'POST'])
 @login_required
-@admin_ip_required
 def admin_delete_post(id):
     post = Post.query.get_or_404(id)
     db.session.delete(post)
@@ -320,14 +268,12 @@ def admin_delete_post(id):
 # Page management
 @app.route('/admin/pages')
 @login_required
-@admin_ip_required
 def admin_pages():
     pages = Page.query.order_by(Page.created_at.desc()).all()
     return render_template('admin/pages.html', pages=pages)
 
 @app.route('/admin/pages/new', methods=['GET', 'POST'])
 @login_required
-@admin_ip_required
 def admin_new_page():
     if request.method == 'POST':
         title = request.form.get('title')
@@ -350,7 +296,6 @@ def admin_new_page():
 
 @app.route('/admin/pages/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
-@admin_ip_required
 def admin_edit_page(id):
     page = Page.query.get_or_404(id)
     
@@ -369,7 +314,6 @@ def admin_edit_page(id):
 
 @app.route('/admin/pages/<int:id>/delete', methods=['POST'])
 @login_required
-@admin_ip_required
 def admin_delete_page(id):
     page = Page.query.get_or_404(id)
     db.session.delete(page)
