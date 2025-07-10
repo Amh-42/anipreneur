@@ -104,12 +104,33 @@ margin: 40px 0;
 border-radius: 10px;
 overflow: hidden;
 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+position: relative;
 }
 
 .featured-image img {
 width: 100%;
 height: 100%;
 object-fit: cover;
+object-position: center;
+transition: transform 0.3s ease;
+}
+
+.featured-image:hover img {
+transform: scale(1.05);
+}
+
+/* Responsive image styles for blog content */
+.article-content img {
+max-width: 100%;
+height: auto;
+border-radius: 8px;
+margin: 20px 0;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.article-content img:hover {
+transform: scale(1.02);
+transition: transform 0.3s ease;
 }
 
 .article-content {
@@ -197,6 +218,63 @@ font-size: 1.1rem;
 @media (max-width: 768px) {
 .hero-content h1 {
 font-size: 2.5rem;
+}
+
+.featured-image {
+height: 300px;
+margin: 20px 0;
+}
+
+.article-content {
+font-size: 1rem;
+line-height: 1.6;
+}
+
+.article-content h3 {
+font-size: 1.4rem;
+}
+
+.article-content img {
+margin: 15px 0;
+border-radius: 6px;
+}
+
+.blog-post {
+padding: 20px;
+margin-bottom: 40px;
+}
+
+.blog-post-container {
+padding: 30px 15px;
+}
+}
+
+@media (max-width: 480px) {
+.hero-content h1 {
+font-size: 2rem;
+}
+
+.featured-image {
+height: 250px;
+margin: 15px 0;
+}
+
+.article-content {
+font-size: 0.95rem;
+}
+
+.article-content h3 {
+font-size: 1.2rem;
+}
+
+.blog-post {
+padding: 15px;
+margin-bottom: 30px;
+}
+
+.blog-post-container {
+padding: 20px 10px;
+}
 }
 
 .hero-content p {

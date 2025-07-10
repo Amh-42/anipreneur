@@ -754,6 +754,12 @@
             color: var(--primary-color);
         }
 
+        /* Global responsive image styles */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .main-nav {
@@ -787,6 +793,28 @@
 
             .blog-grid {
                 grid-template-columns: 1fr;
+            }
+
+            /* Mobile image optimizations */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 0.9rem;
+            }
+
+            /* Small mobile image optimizations */
+            img {
+                max-width: 100%;
+                height: auto;
             }
         }
 
