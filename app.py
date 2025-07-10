@@ -13,14 +13,12 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-change-
 app.config['FLASK_ENV'] = os.environ.get('FLASK_ENV', 'production')
 app.config['DEBUG'] = True
 
-# Import configuration
-try:
-    from config import ADMIN_ALLOWED_IPS as ALLOWED_IPS, ADMIN_DEBUG_MODE as DEBUG_MODE
-except ImportError:
-    # Fallback configuration
-    ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1,196.189.29.152').split(',')
-    ALLOWED_IPS = [ip.strip() for ip in ALLOWED_IPS if ip.strip()]
-    DEBUG_MODE = os.environ.get('ADMIN_DEBUG_MODE', 'False').lower() == 'true'
+# IP-based access control configuration
+ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1,196.189.29.152').split(',')
+ALLOWED_IPS = [ip.strip() for ip in ALLOWED_IPS if ip.strip()]
+
+# Debug mode - set to True to temporarily bypass IP restrictions
+DEBUG_MODE = os.environ.get('ADMIN_DEBUG_MODE', 'False').lower() == 'true'
 
 def admin_ip_required(f):
     """Decorator to restrict admin access to specific IP addresses"""
