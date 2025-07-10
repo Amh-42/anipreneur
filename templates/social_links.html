@@ -2,109 +2,6 @@
 
 {% block title %}Social Links - Anipreneur{% endblock %}
 
-{% block extra_styles %}
-/* SOCIAL LINKS SECTION */
-.social-links-section {
-padding: 80px 0;
-}
-
-.social-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-gap: 30px;
-max-width: 1000px;
-margin: 0 auto;
-}
-
-.social-card {
-background: var(--card-bg);
-border: 1px solid var(--border-color);
-border-radius: 15px;
-padding: 30px;
-text-align: center;
-transition: transform 0.3s ease, box-shadow 0.3s ease;
-backdrop-filter: blur(10px);
-}
-
-.social-card:hover {
-transform: translateY(-10px);
-box-shadow: 0 20px 40px rgba(0, 191, 255, 0.3);
-}
-
-.social-card i {
-font-size: 3rem;
-margin-bottom: 20px;
-display: block;
-}
-
-.social-card h3 {
-font-size: 1.5rem;
-margin-bottom: 15px;
-color: var(--text-color);
-}
-
-.social-card p {
-color: var(--text-secondary);
-margin-bottom: 25px;
-line-height: 1.6;
-}
-
-.social-card .btn {
-width: 100%;
-max-width: 200px;
-margin: 0 auto;
-}
-
-/* TikTok */
-.social-card.tiktok i {
-color: #ff0050;
-}
-
-/* Instagram */
-.social-card.instagram i {
-background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-}
-
-/* Telegram */
-.social-card.telegram i {
-color: #0088cc;
-}
-
-/* YouTube */
-.social-card.youtube i {
-color: #ff0000;
-}
-
-/* Twitter */
-.social-card.twitter i {
-color: #1da1f2;
-}
-
-/* LinkedIn */
-.social-card.linkedin i {
-color: #0077b5;
-}
-
-/* GitHub */
-.social-card.github i {
-color: #333;
-}
-
-/* Discord */
-.social-card.discord i {
-color: #7289da;
-}
-
-@media (max-width: 768px) {
-.social-grid {
-grid-template-columns: 1fr;
-gap: 20px;
-}
-}
-{% endblock %}
-
 {% block content %}
 <!-- Hero Section -->
 <section class="hero">
@@ -199,24 +96,33 @@ gap: 20px;
             <div class="social-card email" data-aos="fade-up" data-aos-delay="1000">
                 <i class="fas fa-envelope"></i>
                 <h3>Email</h3>
-                <p>Professional business inquiries, partnerships, and detailed project discussions.</p>
-                <a href="mailto:me@anipreneur.com" class="btn">Send Email</a>
+                <p>Professional inquiries, collaborations, and business opportunities. Let's create something amazing
+                    together!</p>
+                <a href="mailto:hello@anipreneur.com" class="btn">Send Email</a>
             </div>
 
             <!-- LinkedIn -->
             <div class="social-card linkedin" data-aos="fade-up" data-aos-delay="1100">
                 <i class="fab fa-linkedin"></i>
                 <h3>LinkedIn</h3>
-                <p>Professional networking, business insights, and industry connections in the anime and tech world.</p>
+                <p>Professional networking, industry insights, and business development opportunities.</p>
                 <a href="https://linkedin.com/in/anipreneur" target="_blank" class="btn">Connect</a>
             </div>
 
+            <!-- Snapchat -->
+            <div class="social-card snapchat" data-aos="fade-up" data-aos-delay="1200">
+                <i class="fab fa-snapchat"></i>
+                <h3>Snapchat</h3>
+                <p>Behind-the-scenes content, daily life updates, and exclusive stories from the anime world.</p>
+                <a href="https://snapchat.com/add/anipreneur" target="_blank" class="btn">Add on Snapchat</a>
+            </div>
+
             <!-- Website -->
-            <div class="social-card website" data-aos="fade-up" data-aos-delay="1200">
+            <div class="social-card website" data-aos="fade-up" data-aos-delay="1300">
                 <i class="fas fa-globe"></i>
                 <h3>Website</h3>
-                <p>Visit my main website for the latest content, blog posts, and comprehensive anime insights.</p>
-                <a href="https://anipreneur.com" target="_blank" class="btn">Visit Site</a>
+                <p>Your central hub for all things Anipreneur. Articles, resources, and the latest updates.</p>
+                <a href="{{ url_for('index') }}" class="btn">Visit Website</a>
             </div>
         </div>
     </div>
