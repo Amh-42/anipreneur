@@ -2,6 +2,41 @@
 
 {% block title %}Blog - Anipreneur{% endblock %}
 
+{% block head %}
+<!-- SEO Meta Tags -->
+<meta name="description" content="Discover insights from anime applied to business and entrepreneurship. Deep dives into anime characters, psychological analysis, and actionable life lessons.">
+<meta name="keywords" content="anime business, anime entrepreneurship, anime psychology, business strategy, anime insights">
+
+<!-- Open Graph Meta Tags for Social Media -->
+<meta property="og:title" content="Blog - Anipreneur">
+<meta property="og:description" content="Discover insights from anime applied to business and entrepreneurship. Deep dives into anime characters, psychological analysis, and actionable life lessons.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.url }}">
+<meta property="og:site_name" content="Anipreneur">
+<meta property="og:locale" content="en_US">
+
+<!-- Open Graph Image Tags -->
+<meta property="og:image" content="{{ request.url_root.rstrip('/') }}/static/images/anipreneur-default-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Anipreneur Blog - Anime Business Insights">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@anipreneur">
+<meta name="twitter:creator" content="@anipreneur">
+<meta name="twitter:title" content="Blog - Anipreneur">
+<meta name="twitter:description" content="Discover insights from anime applied to business and entrepreneurship. Deep dives into anime characters, psychological analysis, and actionable life lessons.">
+<meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/images/anipreneur-default-og.jpg">
+<meta name="twitter:image:alt" content="Anipreneur Blog - Anime Business Insights">
+<meta name="twitter:url" content="{{ request.url }}">
+<meta name="twitter:domain" content="anipreneur.com">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ request.url }}">
+{% endblock %}
+
 {% block content %}
 <!-- HERO SECTION -->
 <section class="hero">

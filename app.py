@@ -66,7 +66,8 @@ def blog():
 @app.route('/blog/<slug>')
 def post_detail(slug):
     post = Post.query.filter_by(slug=slug, status='published').first_or_404()
-    return render_template('post_detail.html', post=post)
+    all_posts = Post.query.filter_by(status='published').order_by(Post.created_at.desc()).all()
+    return render_template('post_detail.html', post=post, all_posts=all_posts)
 
 @app.route('/detail')
 def detail():

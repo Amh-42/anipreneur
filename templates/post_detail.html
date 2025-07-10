@@ -9,27 +9,54 @@
 <meta name="keywords" content="{{ post.meta_keywords or 'anime, business, entrepreneurship, strategy' }}">
 <meta name="author" content="{{ post.author.username }}">
 
-<!-- Open Graph Meta Tags -->
+<!-- Open Graph Meta Tags for Social Media -->
 <meta property="og:title" content="{{ post.title | striptags }}">
-<meta property="og:description"
-    content="{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}">
+<meta property="og:description" content="{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}">
 <meta property="og:type" content="article">
 <meta property="og:url" content="{{ request.url }}">
 <meta property="og:site_name" content="Anipreneur">
+<meta property="og:locale" content="en_US">
+
+<!-- Open Graph Image Tags -->
 {% if post.featured_image %}
-<meta property="og:image" content="{{ post.featured_image }}">
+<meta property="og:image" content="{{ post.featured_image if post.featured_image.startswith('http') else request.url_root.rstrip('/') + post.featured_image }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="{{ post.title | striptags }}">
+{% else %}
+<!-- Default image if no featured image -->
+<meta property="og:image" content="{{ request.url_root.rstrip('/') }}/static/images/anipreneur-default-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Anipreneur - Anime Business Insights">
 {% endif %}
+
+<!-- Article-specific Open Graph tags -->
+<meta property="article:published_time" content="{{ post.created_at.isoformat() }}">
+<meta property="article:modified_time" content="{{ post.updated_at.isoformat() }}">
+<meta property="article:author" content="{{ post.author.username }}">
+<meta property="article:section" content="Business">
+<meta property="article:tag" content="{{ post.focus_keyword or 'anime business' }}">
 
 <!-- Twitter Card Meta Tags -->
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@anipreneur">
+<meta name="twitter:creator" content="@anipreneur">
 <meta name="twitter:title" content="{{ post.title | striptags }}">
-<meta name="twitter:description"
-    content="{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}">
+<meta name="twitter:description" content="{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}">
 {% if post.featured_image %}
-<meta name="twitter:image" content="{{ post.featured_image }}">
+<meta name="twitter:image" content="{{ post.featured_image if post.featured_image.startswith('http') else request.url_root.rstrip('/') + post.featured_image }}">
+<meta name="twitter:image:alt" content="{{ post.title | striptags }}">
+{% else %}
+<meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/images/anipreneur-default-og.jpg">
+<meta name="twitter:image:alt" content="Anipreneur - Anime Business Insights">
 {% endif %}
+
+<!-- Additional Social Media Meta Tags -->
+<meta name="twitter:url" content="{{ request.url }}">
+<meta name="twitter:domain" content="anipreneur.com">
 
 <!-- Canonical URL -->
 {% if post.canonical_url %}
@@ -136,7 +163,7 @@
         <h3>Related Articles</h3>
         <div class="related-posts-grid">
             {% set related_posts = [] %}
-            {% for other_post in posts[:3] if other_post.id != post.id %}
+            {% for other_post in all_posts[:3] if other_post.id != post.id %}
             {% set _ = related_posts.append(other_post) %}
             {% endfor %}
 

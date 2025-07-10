@@ -2,6 +2,41 @@
 
 {% block title %}Anipreneur - Decode Anime, Master Life{% endblock %}
 
+{% block head %}
+<!-- SEO Meta Tags -->
+<meta name="description" content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
+<meta name="keywords" content="anime business, anime psychology, anime entrepreneurship, life mastery, anime insights, business strategy">
+
+<!-- Open Graph Meta Tags for Social Media -->
+<meta property="og:title" content="Anipreneur - Decode Anime, Master Life">
+<meta property="og:description" content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.url }}">
+<meta property="og:site_name" content="Anipreneur">
+<meta property="og:locale" content="en_US">
+
+<!-- Open Graph Image Tags -->
+<meta property="og:image" content="{{ request.url_root.rstrip('/') }}/static/images/anipreneur-default-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Anipreneur - Where Anime Meets Business Strategy">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@anipreneur">
+<meta name="twitter:creator" content="@anipreneur">
+<meta name="twitter:title" content="Anipreneur - Decode Anime, Master Life">
+<meta name="twitter:description" content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
+<meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/images/anipreneur-default-og.jpg">
+<meta name="twitter:image:alt" content="Anipreneur - Where Anime Meets Business Strategy">
+<meta name="twitter:url" content="{{ request.url }}">
+<meta name="twitter:domain" content="anipreneur.com">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ request.url }}">
+{% endblock %}
+
 {% block content %}
 <!-- HERO SECTION -->
 <section class="hero">
