@@ -14,7 +14,7 @@ app.config['FLASK_ENV'] = os.environ.get('FLASK_ENV', 'production')
 app.config['DEBUG'] = True
 
 # IP-based access control configuration
-ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1,196.189.29.152').split(',')
+ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1,196.189.29.152,192.168.0.125').split(',')
 ALLOWED_IPS = [ip.strip() for ip in ALLOWED_IPS if ip.strip()]
 
 # Debug mode - set to True to temporarily bypass IP restrictions

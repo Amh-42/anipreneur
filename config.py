@@ -1,7 +1,7 @@
 import os
 
 # Admin Access Configuration
-ADMIN_ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1,196.189.29.152').split(',')
+ADMIN_ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '127.0.0.1,::1,196.189.29.152,192.168.0.125').split(',')
 ADMIN_ALLOWED_IPS = [ip.strip() for ip in ADMIN_ALLOWED_IPS if ip.strip()]
 
 # Debug mode - set to True to temporarily bypass IP restrictions
