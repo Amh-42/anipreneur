@@ -6,42 +6,130 @@
 {% block content %}
 <div class="card">
     <form method="POST">
-        <div class="form-group">
-            <label for="title">Title (HTML allowed)</label>
-            <input type="text" id="title" name="title" class="form-control" value="{{ post.title if post else '' }}"
-                required placeholder="You can use HTML like: The Art of &lt;span&gt;Manipulation&lt;/span&gt;">
+        <!-- Basic Content Section -->
+        <div class="form-section">
+            <h3>📝 Basic Content</h3>
+
+            <div class="form-group">
+                <label for="title">Title (HTML allowed)</label>
+                <input type="text" id="title" name="title" class="form-control" value="{{ post.title if post else '' }}"
+                    required placeholder="You can use HTML like: The Art of &lt;span&gt;Manipulation&lt;/span&gt;">
+                <small class="form-text">Optimal length: 30-60 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="excerpt">Excerpt (Optional)</label>
+                <textarea id="excerpt" name="excerpt" class="form-control"
+                    rows="3">{{ post.excerpt if post else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="featured_image">Featured Image URL (Optional)</label>
+                <input type="url" id="featured_image" name="featured_image" class="form-control"
+                    value="{{ post.featured_image if post else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="content">Content (HTML allowed)</label>
+                <textarea id="content" name="content" class="form-control" rows="15" required
+                    placeholder="You can use HTML tags like:&#10;&lt;h3&gt;Your Heading&lt;/h3&gt;&#10;&lt;p&gt;Your paragraph&lt;/p&gt;&#10;&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;">{{ post.content if post else '' }}</textarea>
+                <div
+                    style="margin-top: 10px; padding: 10px; background: rgba(0, 191, 255, 0.1); border: 1px solid var(--secondary-color); border-radius: 5px; font-size: 0.9rem;">
+                    <strong>HTML Guide:</strong><br>
+                    <strong>Title:</strong><br>
+                    • <code>&lt;span&gt;Highlighted text&lt;/span&gt;</code> - Highlighted text<br>
+                    • <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code> - Bold text<br>
+                    • <code>&lt;em&gt;Italic text&lt;/em&gt;</code> - Italic text<br>
+                    <strong>Content:</strong><br>
+                    • <code>&lt;h3&gt;Heading&lt;/h3&gt;</code> - Section headings<br>
+                    • <code>&lt;p&gt;Paragraph text&lt;/p&gt;</code> - Paragraphs<br>
+                    • <code>&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;</code> - Bullet lists<br>
+                    • <code>&lt;blockquote&gt;Quote&lt;/blockquote&gt;</code> - Blockquotes<br>
+                    • <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code> - Bold text<br>
+                    • <code>&lt;em&gt;Italic text&lt;/em&gt;</code> - Italic text
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="excerpt">Excerpt (Optional)</label>
-            <textarea id="excerpt" name="excerpt" class="form-control"
-                rows="3">{{ post.excerpt if post else '' }}</textarea>
+        <!-- SEO Section -->
+        <div class="form-section">
+            <h3>🎯 SEO Optimization</h3>
+
+            <div class="form-group">
+                <label for="focus_keyword">Primary Focus Keyword *</label>
+                <input type="text" id="focus_keyword" name="focus_keyword" class="form-control"
+                    value="{{ post.focus_keyword if post else '' }}" required
+                    placeholder="e.g., anime business strategies">
+                <small class="form-text">The main keyword you want to rank for</small>
+            </div>
+
+            <div class="form-group">
+                <label for="meta_description">Meta Description</label>
+                <textarea id="meta_description" name="meta_description" class="form-control" rows="3"
+                    placeholder="Compelling description that appears in search results">{{ post.meta_description if post else '' }}</textarea>
+                <small class="form-text">Optimal length: 120-160 characters</small>
+                <div class="char-count" id="meta-desc-count">0/160</div>
+            </div>
+
+            <div class="form-group">
+                <label for="meta_keywords">Meta Keywords (Optional)</label>
+                <input type="text" id="meta_keywords" name="meta_keywords" class="form-control"
+                    value="{{ post.meta_keywords if post else '' }}" placeholder="keyword1, keyword2, keyword3">
+                <small class="form-text">Comma-separated keywords (less important for Google)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="secondary_keywords">Secondary Keywords (Optional)</label>
+                <textarea id="secondary_keywords" name="secondary_keywords" class="form-control" rows="2"
+                    placeholder="One keyword per line">{{ post.secondary_keywords if post else '' }}</textarea>
+                <small class="form-text">Related keywords to include naturally in content</small>
+            </div>
+
+            <div class="form-group">
+                <label for="canonical_url">Canonical URL (Optional)</label>
+                <input type="url" id="canonical_url" name="canonical_url" class="form-control"
+                    value="{{ post.canonical_url if post else '' }}"
+                    placeholder="https://anipreneur.com/blog/your-post-slug">
+                <small class="form-text">Use if this content exists elsewhere</small>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="featured_image">Featured Image URL (Optional)</label>
-            <input type="url" id="featured_image" name="featured_image" class="form-control"
-                value="{{ post.featured_image if post else '' }}">
-        </div>
-
-        <div class="form-group">
-            <label for="content">Content (HTML allowed)</label>
-            <textarea id="content" name="content" class="form-control" rows="15" required
-                placeholder="You can use HTML tags like:&#10;&lt;h3&gt;Your Heading&lt;/h3&gt;&#10;&lt;p&gt;Your paragraph&lt;/p&gt;&#10;&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;">{{ post.content if post else '' }}</textarea>
-            <div
-                style="margin-top: 10px; padding: 10px; background: rgba(0, 191, 255, 0.1); border: 1px solid var(--secondary-color); border-radius: 5px; font-size: 0.9rem;">
-                <strong>HTML Guide:</strong><br>
-                <strong>Title:</strong><br>
-                • <code>&lt;span&gt;Highlighted text&lt;/span&gt;</code> - Highlighted text<br>
-                • <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code> - Bold text<br>
-                • <code>&lt;em&gt;Italic text&lt;/em&gt;</code> - Italic text<br>
-                <strong>Content:</strong><br>
-                • <code>&lt;h3&gt;Heading&lt;/h3&gt;</code> - Section headings<br>
-                • <code>&lt;p&gt;Paragraph text&lt;/p&gt;</code> - Paragraphs<br>
-                • <code>&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;</code> - Bullet lists<br>
-                • <code>&lt;blockquote&gt;Quote&lt;/blockquote&gt;</code> - Blockquotes<br>
-                • <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code> - Bold text<br>
-                • <code>&lt;em&gt;Italic text&lt;/em&gt;</code> - Italic text
+        <!-- SEO Analysis -->
+        <div class="form-section">
+            <h3>📊 SEO Analysis</h3>
+            <div id="seo-analysis" class="seo-analysis-panel">
+                <div class="seo-score">
+                    <div class="score-circle" id="score-circle">
+                        <span id="score-number">0</span>
+                    </div>
+                    <div class="score-label">SEO Score</div>
+                </div>
+                <div class="seo-metrics">
+                    <div class="metric">
+                        <span class="metric-label">Word Count:</span>
+                        <span id="word-count">0</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Keyword Density:</span>
+                        <span id="keyword-density">0%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Title Length:</span>
+                        <span id="title-length">0</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Meta Description Length:</span>
+                        <span id="meta-length">0</span>
+                    </div>
+                </div>
+                <div class="seo-issues" id="seo-issues">
+                    <h4>Issues to Fix:</h4>
+                    <ul id="issues-list"></ul>
+                </div>
+                <div class="seo-suggestions" id="seo-suggestions">
+                    <h4>Suggestions:</h4>
+                    <ul id="suggestions-list"></ul>
+                </div>
             </div>
         </div>
 
@@ -65,15 +153,273 @@
     </form>
 </div>
 
+<style>
+    .form-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background: #fafafa;
+    }
+
+    .form-section h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 10px;
+    }
+
+    .char-count {
+        text-align: right;
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .seo-analysis-panel {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .seo-score {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .score-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .score-label {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .seo-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .metric {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 4px solid var(--secondary-color);
+    }
+
+    .metric-label {
+        font-weight: bold;
+        color: #666;
+    }
+
+    .seo-issues,
+    .seo-suggestions {
+        margin-top: 15px;
+    }
+
+    .seo-issues h4,
+    .seo-suggestions h4 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+    }
+
+    .seo-issues ul,
+    .seo-suggestions ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .seo-issues li {
+        color: #d32f2f;
+        margin-bottom: 5px;
+    }
+
+    .seo-suggestions li {
+        color: #1976d2;
+        margin-bottom: 5px;
+    }
+</style>
+
 <script>
-    // Auto-generate slug from title
-    document.getElementById('title').addEventListener('input', function () {
-        const title = this.value;
-        const slug = title.toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/[-\s]+/g, '-')
-            .trim('-');
-        // You could add a slug field if needed
-    });
+    // SEO Analysis Functions
+    function updateSEOAnalysis() {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const metaDescription = document.getElementById('meta_description').value;
+        const focusKeyword = document.getElementById('focus_keyword').value;
+
+        // Update character counts
+        document.getElementById('meta-desc-count').textContent = `${metaDescription.length}/160`;
+
+        // Calculate metrics
+        const wordCount = content.split(/\s+/).filter(word => word.length > 0).length;
+        const titleLength = title.replace(/<[^>]*>/g, '').length;
+        const metaLength = metaDescription.length;
+
+        // Calculate keyword density
+        const cleanContent = content.replace(/<[^>]*>/g, '').toLowerCase();
+        const keywordCount = (cleanContent.match(new RegExp(focusKeyword.toLowerCase(), 'g')) || []).length;
+        const keywordDensity = wordCount > 0 ? ((keywordCount / wordCount) * 100).toFixed(2) : 0;
+
+        // Update display
+        document.getElementById('word-count').textContent = wordCount;
+        document.getElementById('keyword-density').textContent = keywordDensity + '%';
+        document.getElementById('title-length').textContent = titleLength;
+        document.getElementById('meta-length').textContent = metaLength;
+
+        // Calculate SEO score
+        let score = 0;
+        const issues = [];
+        const suggestions = [];
+
+        // Title length check
+        if (titleLength < 30) {
+            issues.push("Title is too short (should be 30-60 characters)");
+            score -= 10;
+        } else if (titleLength > 60) {
+            issues.push("Title is too long (should be 30-60 characters)");
+            score -= 5;
+        } else {
+            score += 10;
+        }
+
+        // Meta description length check
+        if (metaLength < 120) {
+            issues.push("Meta description is too short (should be 120-160 characters)");
+            score -= 10;
+        } else if (metaLength > 160) {
+            issues.push("Meta description is too long (should be 120-160 characters)");
+            score -= 5;
+        } else {
+            score += 10;
+        }
+
+        // Focus keyword in title
+        if (focusKeyword && title.toLowerCase().includes(focusKeyword.toLowerCase())) {
+            score += 15;
+        } else if (focusKeyword) {
+            issues.push("Focus keyword not found in title");
+            score -= 15;
+        }
+
+        // Focus keyword in meta description
+        if (focusKeyword && metaDescription.toLowerCase().includes(focusKeyword.toLowerCase())) {
+            score += 10;
+        } else if (focusKeyword) {
+            issues.push("Focus keyword not found in meta description");
+            score -= 10;
+        }
+
+        // Content length check
+        if (wordCount < 300) {
+            issues.push("Content is too short (should be at least 300 words)");
+            score -= 20;
+        } else if (wordCount < 1000) {
+            suggestions.push("Consider adding more content (1000+ words for better ranking)");
+            score += 5;
+        } else {
+            score += 15;
+        }
+
+        // Keyword density check
+        if (focusKeyword) {
+            if (keywordDensity < 0.5) {
+                issues.push("Keyword density too low (should be 0.5-2.5%)");
+                score -= 10;
+            } else if (keywordDensity > 2.5) {
+                issues.push("Keyword density too high (risk of keyword stuffing)");
+                score -= 10;
+            } else {
+                score += 15;
+            }
+        }
+
+        // H1 check
+        const h1Count = (content.match(/<h1[^>]*>/gi) || []).length;
+        if (h1Count === 0) {
+            issues.push("No H1 tag found");
+            score -= 10;
+        } else if (h1Count > 1) {
+            issues.push("Multiple H1 tags found (should be only one)");
+            score -= 5;
+        } else {
+            score += 10;
+        }
+
+        // Update score display
+        const finalScore = Math.max(0, score);
+        document.getElementById('score-number').textContent = finalScore;
+
+        // Update score circle color
+        const scoreCircle = document.getElementById('score-circle');
+        if (finalScore >= 80) {
+            scoreCircle.style.background = 'linear-gradient(45deg, #4caf50, #8bc34a)';
+        } else if (finalScore >= 60) {
+            scoreCircle.style.background = 'linear-gradient(45deg, #ff9800, #ffc107)';
+        } else {
+            scoreCircle.style.background = 'linear-gradient(45deg, #f44336, #ff5722)';
+        }
+
+        // Update issues and suggestions
+        const issuesList = document.getElementById('issues-list');
+        const suggestionsList = document.getElementById('suggestions-list');
+
+        issuesList.innerHTML = issues.map(issue => `<li>${issue}</li>`).join('');
+        suggestionsList.innerHTML = suggestions.map(suggestion => `<li>${suggestion}</li>`).join('');
+
+        // Show/hide sections based on content
+        document.getElementById('seo-issues').style.display = issues.length > 0 ? 'block' : 'none';
+        document.getElementById('seo-suggestions').style.display = suggestions.length > 0 ? 'block' : 'none';
+    }
+
+    // Auto-generate meta description from content
+    function generateMetaDescription() {
+        const content = document.getElementById('content').value;
+        const cleanContent = content.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+
+        if (cleanContent.length > 160) {
+            const words = cleanContent.substring(0, 157).split(' ');
+            words.pop(); // Remove last incomplete word
+            const description = words.join(' ') + '...';
+            document.getElementById('meta_description').value = description;
+        } else {
+            document.getElementById('meta_description').value = cleanContent;
+        }
+
+        updateSEOAnalysis();
+    }
+
+    // Event listeners
+    document.getElementById('title').addEventListener('input', updateSEOAnalysis);
+    document.getElementById('content').addEventListener('input', updateSEOAnalysis);
+    document.getElementById('meta_description').addEventListener('input', updateSEOAnalysis);
+    document.getElementById('focus_keyword').addEventListener('input', updateSEOAnalysis);
+
+    // Auto-generate meta description button
+    const generateDescBtn = document.createElement('button');
+    generateDescBtn.type = 'button';
+    generateDescBtn.className = 'btn';
+    generateDescBtn.style.marginTop = '10px';
+    generateDescBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Meta Description from Content';
+    generateDescBtn.onclick = generateMetaDescription;
+    document.getElementById('meta_description').parentNode.appendChild(generateDescBtn);
+
+    // Initialize analysis
+    updateSEOAnalysis();
 </script>
 {% endblock %}

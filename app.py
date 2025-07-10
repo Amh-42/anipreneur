@@ -72,6 +72,10 @@ def post_detail(slug):
 def detail():
     return render_template('detail-page.html')
 
+@app.route('/robots.txt')
+def robots_txt():
+    return app.send_static_file('robots.txt')
+
 # Admin routes
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
@@ -219,6 +223,31 @@ def admin_new_post():
         featured_image = request.form.get('featured_image')
         status = request.form.get('status', 'draft')
         
+        # SEO fields
+        focus_keyword = request.form.get('focus_keyword')
+        meta_description = request.form.get('meta_description')
+        meta_keywords = request.form.get('meta_keywords')
+        secondary_keywords = request.form.get('secondary_keywords')
+        canonical_url = request.form.get('canonical_url')
+        
+        # Generate meta description if not provided
+        if not meta_description and content:
+            from seo_utils import SEOUtils
+            meta_description = SEOUtils.generate_meta_description(content)
+        
+        # Generate schema markup
+        from seo_utils import SEOUtils
+        schema_data = {
+            'title': title,
+            'meta_description': meta_description,
+            'featured_image': featured_image,
+            'author_name': current_user.username,
+            'created_at': datetime.utcnow().isoformat(),
+            'updated_at': datetime.utcnow().isoformat(),
+            'canonical_url': canonical_url or f"https://anipreneur.com/blog/{slugify(title)}"
+        }
+        schema_markup = SEOUtils.generate_schema_markup(schema_data)
+        
         post = Post(
             title=title,
             slug=slugify(title),
@@ -226,7 +255,14 @@ def admin_new_post():
             excerpt=excerpt,
             featured_image=featured_image,
             status=status,
-            author_id=current_user.id
+            author_id=current_user.id,
+            # SEO fields
+            focus_keyword=focus_keyword,
+            meta_description=meta_description,
+            meta_keywords=meta_keywords,
+            secondary_keywords=secondary_keywords,
+            canonical_url=canonical_url,
+            schema_markup=schema_markup
         )
         
         db.session.add(post)
@@ -249,6 +285,31 @@ def admin_edit_post(id):
         post.featured_image = request.form.get('featured_image')
         post.status = request.form.get('status', 'draft')
         post.updated_at = datetime.utcnow()
+        
+        # SEO fields
+        post.focus_keyword = request.form.get('focus_keyword')
+        post.meta_description = request.form.get('meta_description')
+        post.meta_keywords = request.form.get('meta_keywords')
+        post.secondary_keywords = request.form.get('secondary_keywords')
+        post.canonical_url = request.form.get('canonical_url')
+        
+        # Generate meta description if not provided
+        if not post.meta_description and post.content:
+            from seo_utils import SEOUtils
+            post.meta_description = SEOUtils.generate_meta_description(post.content)
+        
+        # Update schema markup
+        from seo_utils import SEOUtils
+        schema_data = {
+            'title': post.title,
+            'meta_description': post.meta_description,
+            'featured_image': post.featured_image,
+            'author_name': post.author.username,
+            'created_at': post.created_at.isoformat(),
+            'updated_at': post.updated_at.isoformat(),
+            'canonical_url': post.canonical_url or f"https://anipreneur.com/blog/{post.slug}"
+        }
+        post.schema_markup = SEOUtils.generate_schema_markup(schema_data)
         
         db.session.commit()
         flash('Post updated successfully!', 'success')

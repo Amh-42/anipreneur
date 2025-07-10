@@ -32,6 +32,15 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
+    # SEO Fields
+    meta_description = db.Column(db.String(160))  # Google recommended length
+    meta_keywords = db.Column(db.String(255))
+    primary_keyword = db.Column(db.String(100))
+    secondary_keywords = db.Column(db.Text)  # JSON string of keywords
+    schema_markup = db.Column(db.Text)  # JSON-LD schema
+    canonical_url = db.Column(db.String(255))
+    focus_keyword = db.Column(db.String(100))  # Main target keyword
+    
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
 
 class Page(db.Model):
@@ -42,6 +51,12 @@ class Page(db.Model):
     status = db.Column(db.String(20), default='draft')  # draft, published
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # SEO Fields
+    meta_description = db.Column(db.String(160))
+    meta_keywords = db.Column(db.String(255))
+    primary_keyword = db.Column(db.String(100))
+    schema_markup = db.Column(db.Text)
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,6 +64,10 @@ class Category(db.Model):
     slug = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # SEO Fields
+    meta_description = db.Column(db.String(160))
+    meta_keywords = db.Column(db.String(255))
     
     posts = db.relationship('Post', secondary='post_categories', backref='categories')
 

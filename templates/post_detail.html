@@ -2,6 +2,106 @@
 
 {% block title %}{{ post.title | striptags }} - Anipreneur{% endblock %}
 
+{% block head %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}">
+<meta name="keywords" content="{{ post.meta_keywords or 'anime, business, entrepreneurship, strategy' }}">
+<meta name="author" content="{{ post.author.username }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="{{ post.title | striptags }}">
+<meta property="og:description"
+    content="{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ request.url }}">
+<meta property="og:site_name" content="Anipreneur">
+{% if post.featured_image %}
+<meta property="og:image" content="{{ post.featured_image }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{% endif %}
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ post.title | striptags }}">
+<meta name="twitter:description"
+    content="{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}">
+{% if post.featured_image %}
+<meta name="twitter:image" content="{{ post.featured_image }}">
+{% endif %}
+
+<!-- Canonical URL -->
+{% if post.canonical_url %}
+<link rel="canonical" href="{{ post.canonical_url }}">
+{% else %}
+<link rel="canonical" href="{{ request.url }}">
+{% endif %}
+
+<!-- Article Schema Markup -->
+{% if post.schema_markup %}
+<script type="application/ld+json">
+{{ post.schema_markup | safe }}
+</script>
+{% else %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ post.title | striptags }}",
+  "description": "{{ post.meta_description or post.excerpt or 'Discover insights from anime applied to business and entrepreneurship.' }}",
+  {% if post.featured_image %}"image": "{{ post.featured_image }}",{% endif %}
+  "author": {
+    "@type": "Person",
+    "name": "{{ post.author.username }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Anipreneur",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://anipreneur.com/static/images/logo.png"
+    }
+  },
+  "datePublished": "{{ post.created_at.isoformat() }}",
+  "dateModified": "{{ post.updated_at.isoformat() }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ request.url }}"
+  }
+}
+</script>
+{% endif %}
+
+<!-- Breadcrumb Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://anipreneur.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://anipreneur.com/blog"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ post.title | striptags }}",
+      "item": "{{ request.url }}"
+    }
+  ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="post-container">
     <div class="post-header" data-aos="fade-up">
@@ -9,19 +109,116 @@
         <div class="post-meta">
             <span>By {{ post.author.username }}</span> |
             <span><i class="fas fa-calendar-alt"></i> {{ post.created_at.strftime('%B %d, %Y') }}</span>
+            {% if post.focus_keyword %}
+            | <span><i class="fas fa-tag"></i> {{ post.focus_keyword }}</span>
+            {% endif %}
         </div>
+
+        {% if post.excerpt %}
+        <div class="post-excerpt">
+            <p>{{ post.excerpt }}</p>
+        </div>
+        {% endif %}
     </div>
 
     {% if post.featured_image %}
     <div class="featured-image" data-aos="fade-up">
-        <img src="{{ post.featured_image }}" alt="{{ post.title }}">
+        <img src="{{ post.featured_image }}" alt="{{ post.title | striptags }}" loading="lazy">
     </div>
     {% endif %}
 
     <div class="post-content" data-aos="fade-up">
         {{ post.content | safe }}
     </div>
+
+    <!-- Related Posts Section -->
+    <div class="related-posts" data-aos="fade-up">
+        <h3>Related Articles</h3>
+        <div class="related-posts-grid">
+            {% set related_posts = [] %}
+            {% for other_post in posts[:3] if other_post.id != post.id %}
+            {% set _ = related_posts.append(other_post) %}
+            {% endfor %}
+
+            {% if related_posts %}
+            {% for related_post in related_posts %}
+            <div class="related-post-card">
+                <h4><a href="{{ url_for('post_detail', slug=related_post.slug) }}">{{ related_post.title | striptags
+                        }}</a></h4>
+                <p>{{ related_post.excerpt or related_post.content[:150] + '...' }}</p>
+                <small>{{ related_post.created_at.strftime('%B %d, %Y') }}</small>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No related posts found.</p>
+            {% endif %}
+        </div>
+    </div>
 </div>
+
+<style>
+    .post-excerpt {
+        background: rgba(0, 191, 255, 0.1);
+        padding: 15px;
+        border-left: 4px solid var(--secondary-color);
+        margin: 15px 0;
+        border-radius: 0 5px 5px 0;
+    }
+
+    .related-posts {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .related-posts h3 {
+        color: var(--primary-color);
+        margin-bottom: 20px;
+    }
+
+    .related-posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .related-post-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: transform 0.2s ease;
+    }
+
+    .related-post-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .related-post-card h4 {
+        margin: 0 0 10px 0;
+    }
+
+    .related-post-card h4 a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .related-post-card h4 a:hover {
+        color: var(--secondary-color);
+    }
+
+    .related-post-card p {
+        color: #666;
+        margin: 10px 0;
+        line-height: 1.5;
+    }
+
+    .related-post-card small {
+        color: #999;
+        font-size: 0.9rem;
+    }
+</style>
 {% endblock %}
 
 {% block extra_scripts %}
