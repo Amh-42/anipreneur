@@ -4,12 +4,15 @@
 
 {% block head %}
 <!-- SEO Meta Tags -->
-<meta name="description" content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
-<meta name="keywords" content="anime business, anime psychology, anime entrepreneurship, life mastery, anime insights, business strategy">
+<meta name="description"
+    content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
+<meta name="keywords"
+    content="anime business, anime psychology, anime entrepreneurship, life mastery, anime insights, business strategy">
 
 <!-- Open Graph Meta Tags for Social Media -->
 <meta property="og:title" content="Anipreneur - Decode Anime, Master Life">
-<meta property="og:description" content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
+<meta property="og:description"
+    content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ request.url }}">
 <meta property="og:site_name" content="Anipreneur">
@@ -27,7 +30,8 @@
 <meta name="twitter:site" content="@anipreneur">
 <meta name="twitter:creator" content="@anipreneur">
 <meta name="twitter:title" content="Anipreneur - Decode Anime, Master Life">
-<meta name="twitter:description" content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
+<meta name="twitter:description"
+    content="Transform anime wisdom into real-world success. Learn entrepreneurship, psychology, and life mastery through the lens of your favorite anime characters and power systems.">
 <meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/images/anipreneur-default-og.jpg">
 <meta name="twitter:image:alt" content="Anipreneur - Where Anime Meets Business Strategy">
 <meta name="twitter:url" content="{{ request.url }}">
@@ -247,4 +251,69 @@ document.getElementById('decrypt-input').value = '';
 }
 }
 // --- END OF TERMINAL CHALLENGE SCRIPT ---
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .blog-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 32px;
+    }
+
+    .blog-card {
+        display: flex;
+        flex-direction: column;
+        height: 500px;
+        min-height: 500px;
+        max-height: 500px;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .blog-card h3 {
+        font-size: 1.35rem;
+        min-height: 56px;
+        max-height: 56px;
+        overflow: hidden;
+        margin: 30px 30px 10px 30px;
+        line-height: 1.2;
+    }
+
+    .blog-card p {
+        flex: 1 1 auto;
+        margin: 0 30px 10px 30px;
+        min-height: 70px;
+        max-height: 90px;
+        overflow: hidden;
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+
+    .read-more {
+        margin: 0 30px 30px 30px;
+        align-self: flex-start;
+    }
+
+    @media (max-width: 768px) {
+        .blog-card {
+            height: 420px;
+            min-height: 420px;
+            max-height: 420px;
+        }
+
+        .blog-card h3 {
+            min-height: 44px;
+            max-height: 44px;
+            font-size: 1.1rem;
+        }
+
+        .blog-card p {
+            min-height: 50px;
+            max-height: 60px;
+            font-size: 0.95rem;
+        }
+    }
+</style>
 {% endblock %}
