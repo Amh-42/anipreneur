@@ -10,9 +10,9 @@
     <style>
         :root {
             --bg-color: #080a18;
-            --primary-color: #ff8c00;
+            --primary-color: #ffc8007b;
             --secondary-color: #00bfff;
-            --accent-yellow: #ffc700;
+            --accent-yellow: #ffc8003c;
             --text-color: #e0e0e0;
             --text-secondary: #a0a0b0;
             --card-bg: rgba(23, 27, 46, 0.7);
@@ -80,8 +80,17 @@
         }
 
         .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             color: var(--primary-color);
             font-size: 1.5rem;
+        }
+
+        .sidebar-header img {
+            height: 30px;
+            width: auto;
+            border-radius: 6px;
         }
 
         .nav-menu {
@@ -304,7 +313,10 @@
     <div class="admin-container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-crown"></i> Anipreneur</h2>
+                <h2>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anipreneur Logo">
+                    <i class="fas fa-crown"></i> Anipreneur
+                </h2>
                 <p style="color: var(--text-secondary); font-size: 0.9rem;">Admin Panel</p>
             </div>
             <ul class="nav-menu">

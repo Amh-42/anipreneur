@@ -27,11 +27,11 @@
         /* CSS RESET & ROOT VARIABLES */
         :root {
             --bg-color: #080a18;
-            --primary-color: #ff8c00;
+            --primary-color: #ffc800b4;
             /* Orange from logo */
             --secondary-color: #00bfff;
             /* Cyan from logo */
-            --accent-yellow: #ffc700;
+            --accent-yellow: #ffc80090;
             /* Yellow from logo */
             --text-color: #e0e0e0;
             --text-secondary: #a0a0b0;
@@ -109,16 +109,22 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 2rem;
             font-weight: 700;
             color: var(--text-color);
             text-decoration: none;
-        }
-
-        .logo span {
             background: linear-gradient(45deg, var(--accent-yellow), var(--primary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            border-radius: 8px;
         }
 
         .main-nav {
@@ -1149,6 +1155,15 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .logo {
+                font-size: 1.5rem;
+                gap: 8px;
+            }
+
+            .logo img {
+                height: 32px;
+            }
+
             .main-nav {
                 display: none;
             }
@@ -1366,7 +1381,10 @@
 
     <!-- Header -->
     <header>
-        <a href="{{ url_for('index') }}" class="logo">Ani<span>preneur</span></a>
+        <a href="{{ url_for('index') }}" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anipreneur Logo">
+            Anipreneur
+        </a>
         <nav class="main-nav">
             <a href="{{ url_for('blog') }}" class="nav-link">Blog</a>
             <a href="{{ url_for('courses') }}" class="nav-link">Courses</a>
